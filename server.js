@@ -102,7 +102,23 @@ function createApp(env = process.env) {
     for (const [id, c] of Object.entries(clients)) {
       if (c && c.status === 'active' && String(users[id]?.apiKey || '') === raw) { uid = id; user = users[id] || {}; client = c; break; }
     }
-    if (!uid) { fail(res, 401, 'EAUTH', 'API key invalid ya revoked hai'); return null; }
+    if (!uid) {
+      // Custom username/password panel users are not Firebase Auth users, so the browser
+      // cannot safely create api_clients through client-side Firebase rules.
+      // If a user's current API key matches, provision the server-side API client record
+      // automatically on first authenticated API request.
+      for (const [id, u] of Object.entries(users)) {
+        if (u && String(u.apiKey || '') === raw && String(u.role || '').toLowerCase() === 'reseller') {
+          uid = id; user = u;
+          client = { uid: id, username: u.username || '', status: 'active', createdAt: Date.now(),
+            permissions: { 'products.read': true, 'balance.read': true, 'orders.create': true, 'orders.read': true },
+            rateLimit: 60, requests: 0 };
+          try { await fb.set(`api_clients/${id}`, client); } catch (e) {}
+          break;
+        }
+      }
+    }
+    if (!uid || !client || client.status !== 'active') { fail(res, 401, 'EAUTH', 'API key invalid ya revoked hai'); return null; }
     const perms = client.permissions || {};
     if (permission && perms[permission] === false) { fail(res, 403, 'EFORBIDDEN', 'API permission allowed nahi hai'); return null; }
     const limit = Math.max(1, Number(client.rateLimit) || 60);
