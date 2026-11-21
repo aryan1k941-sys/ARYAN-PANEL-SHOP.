@@ -7,14 +7,16 @@ const path = require('path');
 const { FirebaseDB } = require('./lib/firebase');
 const { Payments, PayError } = require('./lib/payments');
 const { safeRequest } = require('./lib/netguard');
+const { Notifier } = require('./lib/notify');
 
-const VERSION = '2.0.0';
+const VERSION = '2.1.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.txt': 'text/plain; charset=utf-8' };
 
 function createApp(env = process.env) {
   const fb = new FirebaseDB(env);
   const pay = new Payments(fb, env, console);
+  const notify = new Notifier(fb, env, console); pay.notify = notify;
   const adminEmails = new Set(String(env.ADMIN_EMAILS || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean));
   const origins = new Set(String(env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim().replace(/\/$/, '')).filter(Boolean));
   const publicBase = String(env.PUBLIC_BASE_URL || env.RENDER_EXTERNAL_URL || '').replace(/\/$/, '');
@@ -255,6 +257,29 @@ function createApp(env = process.env) {
       try { const r = await pay.verifyPayment(oid); return ok(res, { orderId: r.orderId, status: r.status }); } catch (e) { return fail(res, e.status || 500, e.code || 'EVERIFY', e.message); }
     }
 
+    // Browser pings for signup / reseller. The server re-reads the database, so a fake ping can never produce a fake alert.
+    if (p === '/api/notify' && m === 'POST') {
+      if (limited(ip, 'notify', 30)) return fail(res, 429, 'ERATE', 'Too many requests');
+      if (needFb(res)) return; const b = await parseBody(req);
+      if (!['signup', 'reseller'].includes(b.event)) return fail(res, 400, 'EACTION', 'Unknown event');
+      return ok(res, await notify.clientEvent(b.event, b.uid, String(b.via || '')));
+    }
+    if (p === '/api/admin/notify' && m === 'POST') {
+      if (limited(ip, 'admin', 60)) return fail(res, 429, 'ERATE', 'Too many requests');
+      if (needFb(res)) return; const admin = await requireAdmin(req, res); if (!admin) return;
+      const b = await parseBody(req);
+      try {
+        switch (b.action) {
+          case 'get': return ok(res, { config: notify.publicConfig(await notify.loadConfig(true)), publicBase: baseOf(req) });
+          case 'save': { const c = await notify.saveConfig(b.config || {}); fb.push('audit_logs', { admin: admin.email, action: 'save_notify', detail: c.chatId || '', ts: Date.now() }).catch(() => {}); return ok(res, { config: c }); }
+          case 'test': return ok(res, await notify.test(String(b.event || 'deposit')));
+          case 'broadcast': { const r = await notify.broadcast(b.text); fb.push('audit_logs', { admin: admin.email, action: 'broadcast', detail: String(b.text).slice(0, 80), ts: Date.now() }).catch(() => {}); return ok(res, r); }
+          case 'logs': return ok(res, await notify.recentLogs(30));
+          default: return fail(res, 400, 'EACTION', 'Unknown action');
+        }
+      } catch (e) { return fail(res, e.status || 502, e.code || 'ENOTIFY', e.message); }
+    }
+
     if (p === '/api/admin/gateways' && m === 'POST') {
       if (limited(ip, 'admin', 60)) return fail(res, 429, 'ERATE', 'Too many requests');
       if (needFb(res)) return; const admin = await requireAdmin(req, res); if (!admin) return;
@@ -305,8 +330,8 @@ function createApp(env = process.env) {
     }
   });
   server.requestTimeout = 60000; server.headersTimeout = 20000;
-  if (env.AUTO_RECONCILE !== '0') pay.startReconciler();
-  return { server, fb, pay };
+  if (env.AUTO_RECONCILE !== '0') { pay.startReconciler(); notify.startWatcher(); }
+  return { server, fb, pay, notify };
 }
 
 if (require.main === module) {

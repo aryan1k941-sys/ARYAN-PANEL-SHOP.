@@ -81,3 +81,37 @@ Ye mil jaye to Admin → Mivopay → Edit → **Custom API format (JSON)** me bh
 
 ## Local test chalana (optional)
 `npm test` (Node 18+ aur openssl chahiye). Browser tests ke liye Playwright: `node test/ui.js`, `node test/admin-ui.js`.
+
+---
+
+# 📢 Telegram Channel Alerts (v2.1) — Setup Guide
+
+Deposit, key sale, naya reseller, referral aur signup ke premium alerts Telegram channel me automatic jate hain. **Sab kuch Admin Panel se set hota hai** (token, channel ID, channel link, website link, footer, buttons).
+
+## Setup (5 minute)
+1. Telegram me **@BotFather** → `/newbot` → **Bot token** copy karo.
+2. Apna **Channel** banao → Settings → Administrators → **Bot ko Admin banao** (Post Messages ON).
+3. Admin Panel → **Alerts & Channel** kholo:
+   - **Bot token** paste karo
+   - **Channel ID**: public channel ho to `@channelusername`, private ho to `-100xxxxxxxxxx`
+   - **Channel link**: `https://t.me/yourchannel` (user panel me "Join Channel" button + alert ke neeche button)
+   - **Website link**: `https://yourshop.com` (har alert ke neeche **🛒 Buy on My Website** button)
+4. **Save settings** → **Test connection** → channel me sample alert aayega → **Alerts ON** karke Save.
+
+## Firebase rules (zaroori)
+`firebase-rules-addendum.json` ke naye nodes (`notify_secrets`, `notify_config`, `notify_state`, `notify_sent`, `notify_logs`) apne rules me add karo (read/write `false`). Bot token isi liye safe rehta hai.
+
+## Kya-kya alert jata hai
+| Event | Kab |
+|---|---|
+| 💰 Deposit | Payment verify hoke wallet credit hone par (bonus ke saath) |
+| 🔑 Key sold | Key bikne par — **key hamesha hidden** (spoiler ●●●●) |
+| 👑 New reseller | Upgrade / free referral reward / admin promote |
+| 🤝 Referral + 🎁 Commission | Referral se member judne par / commission milne par |
+| 🆕 Signup | Naya account |
+Har alert me premium footer + **Buy on My Website** aur **Join Our Channel** buttons.
+
+## Notes
+- Pehli baar server start hone par purane orders ke alert nahi jate (sirf naye).
+- Alert fail ho jaye (Telegram down) to payment/credit par koi asar nahi padta; Admin → Delivery log me error dikhta hai.
+- Username default me masked (`ra*****r`) hota hai; Admin se Full/Hidden kar sakte ho.

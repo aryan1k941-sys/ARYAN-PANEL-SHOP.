@@ -1,6 +1,6 @@
 {
   "name": "aryan-panel-shop",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "ARYAN PANEL SHOP - static site + secure payment gateway backend (Render Web Service)",
   "main": "server.js",
   "private": true,
