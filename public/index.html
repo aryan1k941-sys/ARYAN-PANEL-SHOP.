@@ -2509,10 +2509,13 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
             if (regen && !confirm('Purani key turant band ho jayegi. Continue?')) return;
             const k = pxGenKey();
             try {
+                // Save only the user's current key from the client. The server provisions
+                // the api_clients record on the first API request using its Admin SDK.
                 await update(ref(db, `users/${currentUserId}`), { apiKey: k });
-                await set(ref(db, `api_clients/${currentUserId}`), { uid: currentUserId, username: userData.username || '', status: 'active', createdAt: Date.now(), permissions: { 'products.read': true, 'balance.read': true, 'orders.create': true, 'orders.read': true }, rateLimit: 60, requests: 0 });
-                pxKeyShown = true; showToast('API key ready');
-            } catch (e) { showToast('Key save nahi hui', 'error'); }
+                pxMyApi = { uid: currentUserId, username: userData.username || '', status: 'active',
+                    permissions: { 'products.read': true, 'balance.read': true, 'orders.create': true, 'orders.read': true }, rateLimit: 60, requests: 0 };
+                pxKeyShown = true; renderApi(); showToast('API key ready');
+            } catch (e) { showToast('Key save nahi hui: ' + (e?.message || 'Firebase error'), 'error'); }
         };
         window.pxRevokeKey = async () => { if (!confirm('API key revoke karni hai?')) return; try { await update(ref(db, `api_clients/${currentUserId}`), { status: 'revoked', revokedAt: Date.now() }); showToast('Key revoked'); } catch (e) { showToast('Failed', 'error'); } };
 
