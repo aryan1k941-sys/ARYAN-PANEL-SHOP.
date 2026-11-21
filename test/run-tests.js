@@ -9,4 +9,5 @@ if (r.status !== 0) { console.error('openssl needed for tests:', String(r.stderr
 const clean = { ...process.env }; delete clean.GW_ALLOW_PRIVATE; delete clean.FIREBASE_TEST_NO_AUTH; clean.NODE_ENV = 'production';
 const a = spawnSync(process.execPath, [path.join(__dirname, 'ssrf.js')], { stdio: 'inherit', env: clean });
 const b = spawnSync(process.execPath, [path.join(__dirname, 'suite.js')], { stdio: 'inherit', env: { ...process.env, NODE_ENV: 'test', NODE_EXTRA_CA_CERTS: cert, GW_ALLOW_PRIVATE: '1', FIREBASE_TEST_NO_AUTH: '1', TEST_TLS_KEY: key, TEST_TLS_CERT: cert } });
-process.exit(a.status || b.status || 0);
+const c = spawnSync(process.execPath, [path.join(__dirname, 'notify.js')], { stdio: 'inherit', env: { ...process.env, NODE_ENV: 'test', NODE_EXTRA_CA_CERTS: cert, GW_ALLOW_PRIVATE: '1', FIREBASE_TEST_NO_AUTH: '1', TEST_TLS_KEY: key, TEST_TLS_CERT: cert } });
+process.exit(a.status || b.status || c.status || 0);
