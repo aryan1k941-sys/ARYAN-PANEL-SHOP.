@@ -49,7 +49,7 @@ function createApp(env = process.env) {
   };
   const cors = (req, res) => {
     const o = String(req.headers.origin || '').replace(/\/$/, '');
-    if (o && origins.has(o)) { res.setHeader('Access-Control-Allow-Origin', o); res.setHeader('Vary', 'Origin'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Max-Age', '600'); }
+    if (o && origins.has(o)) { res.setHeader('Access-Control-Allow-Origin', o); res.setHeader('Vary', 'Origin'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key'); res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Max-Age', '600'); }
   };
   const needFb = (res) => { if (fb.configured()) return false; fail(res, 503, 'ENOFB', 'Server me Firebase credentials set nahi hain (FIREBASE_SERVICE_ACCOUNT env variable). Deployment guide dekho.'); return true; };
   const requireAdmin = async (req, res) => {
@@ -91,6 +91,95 @@ function createApp(env = process.env) {
     }
   }
 
+  /* ---------- reseller API v1 (/api/v1/*) ---------- */
+  async function apiV1Auth(req, res, permission) {
+    if (needFb(res)) return null;
+    const raw = String(req.headers['x-api-key'] || '').trim() || ((/^Bearer\s+(.+)$/i.exec(String(req.headers.authorization || '')) || [])[1] || '').trim();
+    if (!raw) { fail(res, 401, 'EAUTH', 'API key missing'); return null; }
+    const clients = (await fb.get('api_clients')) || {};
+    const users = (await fb.get('users')) || {};
+    let uid = null, user = null, client = null;
+    for (const [id, c] of Object.entries(clients)) {
+      if (c && c.status === 'active' && String(users[id]?.apiKey || '') === raw) { uid = id; user = users[id] || {}; client = c; break; }
+    }
+    if (!uid) { fail(res, 401, 'EAUTH', 'API key invalid ya revoked hai'); return null; }
+    const perms = client.permissions || {};
+    if (permission && perms[permission] === false) { fail(res, 403, 'EFORBIDDEN', 'API permission allowed nahi hai'); return null; }
+    const limit = Math.max(1, Number(client.rateLimit) || 60);
+    if (limited(clientIp(req), 'api-v1-' + uid, limit)) { fail(res, 429, 'ERATE', 'API rate limit exceed ho gaya'); return null; }
+    try { await fb.update(`api_clients/${uid}`, { requests: (Number(client.requests) || 0) + 1, lastRequestAt: Date.now() }); } catch (e) {}
+    return { uid, user, client };
+  }
+  const apiV1Reply = (res, status, success, data) => send(res, status, { success, ...(success ? { data } : { error: data }) });
+  const apiV1Products = async () => {
+    const [sp, mg] = await Promise.all([fb.get('store_products'), fb.get('management')]);
+    const products = [];
+    const src = sp || {};
+    const prices = mg || {};
+    for (const [key, raw] of Object.entries(src)) {
+      const m = raw || {};
+      const plansObj = prices[key] || m.plans || {};
+      const plans = Object.entries(plansObj).map(([pk, x]) => ({
+        duration: String(x?.daysPlan || pk),
+        price: Number(x?.priceRate) || 0,
+        resellerPrice: x?.resellerPrice != null && x?.resellerPrice !== '' ? Number(x.resellerPrice) : null
+      })).filter(x => x.price > 0 || x.resellerPrice != null);
+      const pid = m.pid != null ? String(m.pid) : '';
+      if (!pid) continue;
+      products.push({ pid, product_id: pid, name: String(m.name || m.productName || key), status: String(m.status || 'ACTIVE').toUpperCase(), category: String(m.category || m.game || ''), plans });
+    }
+    return products;
+  };
+  async function apiV1Order(req, res, auth, body) {
+    const pid = String(body.pid ?? body.product_id ?? '').trim();
+    const duration = String(body.duration ?? '').trim();
+    const qty = Math.max(1, Math.min(100, parseInt(body.quantity ?? body.qty ?? 1, 10) || 1));
+    if (!pid || !duration) return apiV1Reply(res, 400, false, { code: 'EBADREQUEST', message: 'pid/product_id aur duration required hain' });
+    const products = await apiV1Products();
+    const product = products.find(p => String(p.pid) === pid && p.status !== 'INACTIVE');
+    if (!product) return apiV1Reply(res, 404, false, { code: 'ENOTFOUND', message: 'Product PID nahi mila' });
+    const plan = product.plans.find(x => String(x.duration).toLowerCase() === duration.toLowerCase());
+    if (!plan) return apiV1Reply(res, 404, false, { code: 'EDURATION', message: 'Is product ka duration nahi mila' });
+    const reseller = String(auth.user.role || '').toLowerCase() === 'reseller';
+    const unitPrice = reseller && plan.resellerPrice != null ? plan.resellerPrice : plan.price;
+    const total = Math.round(unitPrice * qty * 100) / 100;
+    const maps = (await fb.get('pid_mappings')) || {};
+    // Fallback: use ARYAN PID + duration against mapping records if productKey lookup above is unavailable.
+    const productKeys = Object.entries((await fb.get('store_products')) || {}).filter(([k,v]) => String(v?.pid || '') === pid).map(([k])=>k);
+    const cands = Object.values(maps).filter(m => m && m.enabled !== false && productKeys.includes(String(m.productKey)) && String(m.planKey || '') === String(duration)).sort((a,b)=>(Number(a.priority)||100)-(Number(b.priority)||100));
+    if (!cands.length) return apiV1Reply(res, 409, false, { code: 'EMAPPING', message: 'Is PID/duration ka supplier mapping nahi hai' });
+    const current = Number((await fb.get(`users/${auth.uid}/balance`)) || 0);
+    if (current < total) return apiV1Reply(res, 402, false, { code: 'EBALANCE', message: `Insufficient balance. Required ₹${total.toFixed(2)}, available ₹${current.toFixed(2)}` });
+    const deb = await fb.transaction(`users/${auth.uid}/balance`, cur => { const n=Number(cur)||0; return n >= total ? Math.round((n-total)*100)/100 : undefined; });
+    if (!deb.committed) return apiV1Reply(res, 409, false, { code: 'EBALANCE', message: 'Balance change nahi ho saka, retry karo' });
+    let keys = [], used = null, lastErr = 'Supplier ne key nahi di';
+    const allowed = await supplierHosts();
+    try {
+      for (const m of cands) {
+        const s = (await fb.get(`suppliers/${m.supplierId}`)) || {};
+        if (!s.enabled || !s.apiUrl || !s.apiKey) continue;
+        try {
+          const u = new URL(s.apiUrl); const host=u.hostname.toLowerCase(); if (!allowed.has(host)) throw Object.assign(new Error('Supplier host allowed nahi hai'), {code:'EGWBLOCKED'});
+          const headers={'Content-Type':'application/x-www-form-urlencoded','Accept':'application/json'}; if (s.masterKey) headers['x-master-key']=String(s.masterKey).slice(0,300);
+          const r=await safeRequest({url:s.apiUrl,method:'POST',headers,body:new URLSearchParams({api_key:String(s.apiKey),action:'buy',product_id:String(m.supplierPid),duration:String(m.supplierDuration || duration),quantity:String(qty)}).toString(),timeoutMs:20000,allowedHosts:allowed});
+          const j=(()=>{try{return JSON.parse(r.text)}catch(e){return null}})();
+          const got=j && Array.isArray(j.keys)?j.keys.filter(Boolean):(j&&j.key?[j.key]:[]);
+          if (got.length >= qty) { keys=got.slice(0,qty); used=m; break; }
+          lastErr=(j&&(j.message||j.error))||`Supplier HTTP ${r.status}`;
+        } catch(e) { lastErr=e.message||'Supplier request failed'; }
+      }
+      if (!keys.length) throw Object.assign(new Error(lastErr), {code:'ESUPPLIER'});
+      const orderId='api_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);
+      for (const k of keys) await fb.push(`users/${auth.uid}/generatedKeys`, { product: product.name, pid, duration: plan.duration, qty: 1, keyCode:String(k), timestamp:new Date().toISOString(), source:'api', supplier:true, price:unitPrice });
+      await fb.push('orders', { uid:auth.uid, username:auth.user.username||'', productKey:used.productKey, product:product.name, pid, duration:plan.duration, planKey:plan.duration, qty:keys.length, unitPrice, total:Math.round(unitPrice*keys.length*100)/100, status:'delivered', source:'api', apiOrderId:orderId, supplierId:used.supplierId, supplierPid:used.supplierPid, ts:Date.now() });
+      await fb.push(`users/${auth.uid}/transactions`, { type:'API Purchase', amount:-Math.round(unitPrice*keys.length*100)/100, description:`API order ${orderId} - ${product.name}`, date:new Date().toLocaleString(), ts:Date.now() });
+      return apiV1Reply(res, 200, true, { order_id:orderId, pid, product:product.name, duration:plan.duration, quantity:keys.length, unit_price:unitPrice, total:Math.round(unitPrice*keys.length*100)/100, status:'delivered', keys });
+    } catch(e) {
+      await fb.transaction(`users/${auth.uid}/balance`, cur=>Math.round(((Number(cur)||0)+total)*100)/100).catch(()=>{});
+      return apiV1Reply(res, 502, false, { code:e.code||'ESUPPLIER', message:e.message||'Supplier purchase failed; balance refunded' });
+    }
+  }
+
   /* ---------- routes ---------- */
   async function api(req, res, url) {
     const ip = clientIp(req); const p = url.pathname; const m = req.method;
@@ -98,6 +187,30 @@ function createApp(env = process.env) {
       const out = { status: 'up', version: VERSION, time: new Date().toISOString(), firebaseConfigured: fb.configured(), adminConfigured: adminEmails.size > 0 };
       if (url.searchParams.get('deep') === '1' && fb.configured()) { try { await fb.get('site_settings/maintenance'); out.firebase = 'reachable'; } catch (e) { out.firebase = 'error: ' + e.message; } }
       return ok(res, out);
+    }
+    if (p === '/api/v1/products' && m === 'GET') {
+      const a = await apiV1Auth(req, res, 'products.read'); if (!a) return;
+      try { return apiV1Reply(res, 200, true, await apiV1Products()); } catch(e) { return apiV1Reply(res, 500, false, { code:'EAPI', message:e.message }); }
+    }
+    if (p === '/api/v1/balance' && m === 'GET') {
+      const a = await apiV1Auth(req, res, 'balance.read'); if (!a) return;
+      try { const balance=Number((await fb.get(`users/${a.uid}/balance`))||0); return apiV1Reply(res,200,true,{balance, currency:'INR'}); } catch(e) { return apiV1Reply(res,500,false,{code:'EAPI',message:e.message}); }
+    }
+    if (p === '/api/v1/order' && m === 'POST') {
+      const a = await apiV1Auth(req, res, 'orders.create'); if (!a) return;
+      try { return await apiV1Order(req,res,a,await parseBody(req)); } catch(e) { return apiV1Reply(res,500,false,{code:'EAPI',message:e.message}); }
+    }
+    if (p.startsWith('/api/v1/order/') && m === 'GET') {
+      const a = await apiV1Auth(req, res, 'orders.read'); if (!a) return;
+      const oid=decodeURIComponent(p.slice('/api/v1/order/'.length));
+      const all=(await fb.get('orders'))||{}; const found=Object.values(all).find(o=>o && o.uid===a.uid && String(o.apiOrderId||o.order_id||'')===oid);
+      if (!found) return apiV1Reply(res,404,false,{code:'ENOTFOUND',message:'Order nahi mila'});
+      return apiV1Reply(res,200,true,found);
+    }
+    if (p === '/api/v1/orders' && m === 'GET') {
+      const a = await apiV1Auth(req, res, 'orders.read'); if (!a) return;
+      const all=(await fb.get('orders'))||{}; const list=Object.values(all).filter(o=>o&&o.uid===a.uid&&o.source==='api').sort((x,y)=>(Number(y.ts)||0)-(Number(x.ts)||0));
+      return apiV1Reply(res,200,true,list);
     }
     if (p === '/api/gw' && (m === 'GET' || m === 'POST')) { if (limited(ip, 'gw', 120)) return fail(res, 429, 'ERATE', 'Too many requests'); return handleGw(req, res, url); }
 
