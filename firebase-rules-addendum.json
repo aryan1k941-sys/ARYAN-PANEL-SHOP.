@@ -1,0 +1,11 @@
+{
+  "_README": "Ye POORA rules file NAHI hai. Apne maujooda rules me sirf ye 6 nodes ADD/MERGE karo (replace mat karna, warna app toot jayegi). Server (service account) rules ko bypass karta hai, isliye sirf server in nodes me likh sakta hai.",
+  "rules": {
+    "gateway_secrets":  { ".read": false, ".write": false },
+    "pending_payments": { ".read": false, ".write": false },
+    "payment_gateways": { ".read": true,  ".write": false },
+    "auto_payments":    { ".read": "auth != null", ".write": false },
+    "gateway_logs":     { ".read": "auth != null", ".write": false },
+    "audit_logs":       { ".read": "auth != null", ".write": false }
+  }
+}
