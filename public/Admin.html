@@ -563,6 +563,51 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
   };
 })();
 </script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style id="ax3-css">
+/* ============ ARYAN v3 "CONSOLE" — admin identity (cool teal/ice, distinct from the user panel) ============ */
+:root{--ax-bg:#060b11;--ax-line:rgba(94,234,212,.16);--ax-a:#2ee6c5;--ax-b:#5b7cff;--ax-c:#ffc857;--ax-ice:#e8f4f8;--ax-mut:#8aa0ad;
+ --ax-btn:linear-gradient(180deg,#5cf2d6 0%,#1fc9b0 55%,#12957f 100%);--ax-btn-sh:0 1px 0 rgba(255,255,255,.5) inset,0 -3px 0 rgba(0,70,60,.4) inset,0 10px 22px -8px rgba(31,201,176,.55),0 2px 0 #0a5a4c;--ax-btn-ink:#012b24}
+html[data-theme]{--ax-a:var(--neon-cyan);--ax-b:var(--neon-purple);--ax-btn:linear-gradient(180deg,var(--neon-cyan),var(--neon-purple));--ax-btn-sh:0 1px 0 rgba(255,255,255,.4) inset,0 -3px 0 rgba(0,0,0,.3) inset,0 10px 22px -8px var(--neon-purple);--ax-btn-ink:#03101a}
+html:not([data-theme]){--bg-color:#060b11;--card-bg:rgba(14,24,34,.78);--card-border:rgba(94,234,212,.16);--neon-cyan:#2ee6c5;--neon-purple:#5b7cff;--neon-pink:#ffc857;--input-bg:#0d1722;--text-muted:#8aa0ad}
+html:not([data-theme]) body{background:radial-gradient(800px 460px at 100% -10%,rgba(91,124,255,.16),transparent 60%),radial-gradient(700px 440px at -10% 10%,rgba(46,230,197,.11),transparent 60%),#060b11}
+.ax-btn,.btn,.btn-cyan,.qa-btn,.ks-btn,.action-btn,.mini-btn,.btn-save-sm,.btn-signin,.ax3-b{position:relative;overflow:hidden;border-radius:12px!important;font-weight:700;letter-spacing:.02em;transition:transform .12s,box-shadow .2s,filter .2s;cursor:pointer}
+.ax-btn,.btn-cyan,.btn-signin,.btn-save-sm,.ax3-b{background:var(--ax-btn)!important;color:var(--ax-btn-ink)!important;border:0!important;box-shadow:var(--ax-btn-sh)!important;text-shadow:0 1px 0 rgba(255,255,255,.3)}
+.ax-btn.g{background:linear-gradient(180deg,#4aa8ff,#2c5be0)!important;color:#fff!important;text-shadow:none;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 -3px 0 rgba(0,20,90,.4) inset,0 10px 22px -8px rgba(44,91,224,.6)!important}
+.ax-btn.r{background:linear-gradient(180deg,#ff7a6a,#d6243a)!important;color:#fff!important;text-shadow:none;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 -3px 0 rgba(90,0,10,.4) inset,0 10px 22px -8px rgba(214,36,58,.6)!important}
+.ax3-b.ghost{background:rgba(255,255,255,.06)!important;color:var(--ax-ice)!important;border:1px solid var(--ax-line)!important;box-shadow:none!important;text-shadow:none}
+.ax-btn::after,.btn-cyan::after,.ax3-b::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-18deg);transition:left .55s;pointer-events:none}
+.ax-btn:hover::after,.btn-cyan:hover::after,.ax3-b:hover::after{left:130%}
+.ax-btn:active,.btn-cyan:active,.ax3-b:active,.qa-btn:active{transform:translateY(2px) scale(.985)}
+.qa-btn{border:1px solid var(--ax-line)!important;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015))!important;box-shadow:0 14px 30px -18px #000!important}
+.glass,.stat-card{border:1px solid var(--ax-line)!important;border-radius:20px!important;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012))!important;box-shadow:0 18px 40px -22px #000!important}
+.sidebar{background:linear-gradient(180deg,#0a141d,#060b11)!important;border-right:1px solid var(--ax-line)!important}
+.sidebar-item.active-menu{background:linear-gradient(90deg,rgba(46,230,197,.2),rgba(91,124,255,.05))!important;box-shadow:inset 3px 0 0 var(--ax-a)!important}
+input,select,textarea{border-radius:11px!important}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ax-a);outline-offset:2px}
+/* console blocks */
+.ax3-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ax3-k{border-radius:18px;padding:14px;border:1px solid var(--ax-line);background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.012));position:relative;overflow:hidden}
+.ax3-k::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--c,var(--ax-a))}
+.ax3-k small{color:var(--ax-mut);font-size:11px;display:block}.ax3-k b{font-size:22px;display:block;margin-top:4px;font-family:'Sora','Poppins',sans-serif;color:var(--ax-ice)}
+.ax3-k i{position:absolute;right:12px;top:12px;color:var(--c,var(--ax-a));opacity:.8}
+.ax3-k em{font-style:normal;font-size:11px;color:var(--ax-mut)}
+.ax3-card{border-radius:20px;padding:16px;margin-bottom:14px;border:1px solid var(--ax-line);background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012))}
+.ax3-card h3{font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:'Sora','Poppins',sans-serif}
+.ax3-2{display:grid;grid-template-columns:1fr;gap:14px}
+.ax3-list div{display:flex;justify-content:space-between;gap:10px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04);margin-bottom:7px;font-size:12px;align-items:center}
+.ax3-list small{display:block;color:var(--ax-mut);font-size:10.5px}
+.ax3-p{color:var(--ax-a);font-weight:800}.ax3-n{color:#ff8a7a;font-weight:800}
+.ax3-bar{height:7px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px}.ax3-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ax-a),var(--ax-b))}
+.ax3-row{display:flex;gap:8px;flex-wrap:wrap}
+.ax3-b{padding:11px 14px;font-size:12.5px;display:inline-flex;align-items:center;gap:7px;border:0}
+.ax3-pill{font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--ax-mut)}
+.ax3-pill.ok{background:rgba(46,230,197,.18);color:var(--ax-a)}.ax3-pill.bad{background:rgba(255,100,90,.2);color:#ff8a7a}
+.ax3-hero{border-radius:22px;padding:18px;margin-bottom:14px;border:1px solid rgba(46,230,197,.3);background:radial-gradient(120% 140% at 100% 0%,rgba(91,124,255,.3),transparent 55%),linear-gradient(160deg,#0f2230,#08121b)}
+.ax3-hero small{color:var(--ax-mut)}.ax3-hero h2{font-family:'Sora','Poppins',sans-serif;font-size:26px;margin:4px 0 12px}
+@media(min-width:760px){.ax3-kpis{grid-template-columns:repeat(4,1fr)}.ax3-2{grid-template-columns:1fr 1fr}}
+
+</style>
 </head>
 <body>
 
@@ -651,6 +696,9 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
             <div class="sidebar-item" id="menu-Suppliers" onclick="switchTab('Suppliers')"><i class="fas fa-server"></i> Supplier Panels &amp; Mapping</div>
             <div class="sidebar-item" id="menu-Gateways" onclick="switchTab('Gateways')"><i class="fas fa-credit-card"></i> Payment Gateways</div>
             <div class="sidebar-item" id="menu-ApiMgmt" onclick="switchTab('ApiMgmt')"><i class="fas fa-code"></i> API Management</div>
+            <div class="sidebar-item" id="menu-AlertsCh" onclick="switchTab('AlertsCh')"><i class="fas fa-bell"></i> Alerts &amp; Channel</div>
+            <div class="sidebar-item" id="menu-Insights" onclick="switchTab('Insights')"><i class="fas fa-chart-pie"></i> Business Insights</div>
+            <div class="sidebar-item" id="menu-QuickAdd" onclick="switchTab('QuickAdd')"><i class="fas fa-bolt"></i> Quick Add Packs</div>
             <div class="sidebar-item" id="menu-TelegramSet" onclick="switchTab('TelegramSet')"><i class="fab fa-telegram"></i> Telegram Bot</div>
             <div class="sidebar-item" id="menu-MediaMgr" onclick="switchTab('MediaMgr')"><i class="fas fa-photo-film"></i> Media, Videos &amp; Branding</div>
             <div class="sidebar-item" id="menu-Announce" onclick="switchTab('Announce')"><i class="fas fa-bullhorn"></i> Announcements</div>
@@ -716,6 +764,9 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
         <div class="tab-view-section hidden" id="view-Suppliers"><div id="ax-sup"></div></div>
         <div class="tab-view-section hidden" id="view-Gateways"><div id="ax-gw"></div></div>
         <div class="tab-view-section hidden" id="view-ApiMgmt"><div id="ax-api"></div></div>
+        <div class="tab-view-section hidden" id="view-AlertsCh"><div id="ax-alerts"></div></div>
+        <div class="tab-view-section hidden" id="view-Insights"><div id="ax-ins"></div></div>
+        <div class="tab-view-section hidden" id="view-QuickAdd"><div id="ax-qa"></div></div>
         <div class="tab-view-section hidden" id="view-TelegramSet"><div id="ax-tg"></div></div>
         <div class="tab-view-section hidden" id="view-MediaMgr"><div id="ax-media"></div></div>
         <div class="tab-view-section hidden" id="view-Announce"><div id="ax-ann"></div></div>
@@ -927,6 +978,12 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
                 <div class="input-group"><label>Donate Money For Any Help link</label><input type="text" id="lk-donateUrl" placeholder="https://..."></div>
                 <div class="input-group"><label>Update Group (JOIN NOW) link</label><input type="text" id="lk-joinUrl" placeholder="https://..."></div>
                 <div class="input-group"><label>Floating Telegram button link</label><input type="text" id="lk-telegramUrl" placeholder="https://..."></div>
+                <div class="input-group"><label>WhatsApp support link <span style="color:#06efe6">(Support Hub + floating button)</span></label><input type="text" id="lk-whatsappUrl" placeholder="https://wa.me/91XXXXXXXXXX"></div>
+                <div class="input-group"><label>YouTube channel link</label><input type="text" id="lk-youtubeUrl" placeholder="https://youtube.com/@..."></div>
+                <div class="input-group"><label>Instagram link</label><input type="text" id="lk-instagramUrl" placeholder="https://instagram.com/..."></div>
+                <div class="input-group"><label>Discord invite link</label><input type="text" id="lk-discordUrl" placeholder="https://discord.gg/..."></div>
+                <div class="input-group"><label>Support email</label><input type="text" id="lk-supportEmail" placeholder="support@yourdomain.com"></div>
+                <div class="input-group"><label>Support hours (Support Hub me dikhega)</label><input type="text" id="lk-supportHours" maxlength="90" placeholder="Daily 10 AM – 10 PM IST"></div>
                 <div class="input-group"><label>Announcement (dashboard par chalti hui line, khali = band)</label><input type="text" id="lk-announcement" maxlength="160" placeholder="Jaise: Aaj nayi update aayi hai!"></div>
                 <div class="input-group"><label>Safety balance (Keep N+ balance)</label><input type="number" id="lk-safetyBalance" min="0" placeholder="10"></div>
                 <div class="input-group"><label>Free Reseller ke liye kitne referral chahiye</label><input type="number" id="lk-refTarget" min="1" placeholder="30"></div>
@@ -1183,12 +1240,12 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
                     <span class="ap-pill ${esc(r.status || 'pending')}">${esc(r.status || 'pending')}</span>
                 </div>`).join('');
         });
-        const LK_KEYS = ['announcement', 'howToBuyUrl', 'howToDepositUrl', 'donateUrl', 'joinUrl', 'telegramUrl', 'safetyBalance', 'refTarget', 'binanceText', 'bkashText'];
+        const LK_KEYS = ['announcement', 'howToBuyUrl', 'howToDepositUrl', 'donateUrl', 'joinUrl', 'telegramUrl', 'whatsappUrl', 'youtubeUrl', 'instagramUrl', 'discordUrl', 'supportEmail', 'supportHours', 'safetyBalance', 'refTarget', 'binanceText', 'bkashText'];
         onValue(ref(db, 'site_settings/links'), (snap) => {
             const d = snap.exists() ? snap.val() : {};
             LK_KEYS.forEach(k => { const e = document.getElementById('lk-' + k); if (e) e.value = d[k] != null ? d[k] : ''; });
         });
-        ['howToBuyUrl', 'howToDepositUrl', 'donateUrl', 'joinUrl', 'telegramUrl'].forEach(k => {
+        ['howToBuyUrl', 'howToDepositUrl', 'donateUrl', 'joinUrl', 'telegramUrl', 'whatsappUrl', 'youtubeUrl', 'instagramUrl', 'discordUrl'].forEach(k => {
             const inp = document.getElementById('lk-' + k); if (!inp) return;
             const b = document.createElement('button'); b.type = 'button'; b.className = 'btn btn-cyan'; b.style.cssText = 'margin-top:6px;padding:6px 12px;font-size:12px;';
             b.innerHTML = '<i class="fas fa-up-right-from-square"></i> Test link'; b.onclick = () => inp.value.trim() ? window.open(inp.value.trim(), '_blank') : showToast('Pehle link daalo', 'error');
@@ -1197,7 +1254,7 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
         document.getElementById('btn-save-links').onclick = async () => {
             const o = { updatedAt: Date.now() };
             LK_KEYS.forEach(k => { o[k] = document.getElementById('lk-' + k).value.trim(); });
-            for (const k of ['howToBuyUrl', 'howToDepositUrl', 'donateUrl', 'joinUrl', 'telegramUrl']) if (o[k] && !/^https?:\/\//i.test(o[k])) return showToast(k + ' https:// se start hona chahiye', 'error');
+            for (const k of ['howToBuyUrl', 'howToDepositUrl', 'donateUrl', 'joinUrl', 'telegramUrl', 'whatsappUrl', 'youtubeUrl', 'instagramUrl', 'discordUrl']) if (o[k] && !/^https?:\/\//i.test(o[k])) return showToast(k + ' https:// se start hona chahiye', 'error');
             try { await set(ref(db, 'site_settings/links'), o); showToast('Links saved!'); } catch (e) { showToast('Save failed!', 'error'); }
         };
         onValue(ref(db, 'site_settings/reseller_upgrade'), (snap) => {
@@ -1897,7 +1954,7 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
         const nextRole = currentlyReseller ? "User" : "Reseller";
         try {
             await update(ref(db, `users/${uid}`), { role: nextRole });
-            showToast(nextRole === "Reseller" ? "Reseller bana diya" : "Reseller remove ho gaya, ab User hai");
+            if (nextRole === "Reseller" && window.apNotifyAdmin) apNotifyAdmin("reseller", uid, "admin"); showToast(nextRole === "Reseller" ? "Reseller bana diya" : "Reseller remove ho gaya, ab User hai");
         } catch(e) { showToast("Role update failed", "error"); }
     };
 
@@ -2291,7 +2348,7 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
 
 
     /* ================= LISTENERS + TAB HOOK ================= */
-    const RENDER = { PidMgmt: 'renderPid', PriceMgmt: 'renderPrice', Suppliers: 'renderSup', Gateways: 'renderGw', ApiMgmt: 'renderApi', TelegramSet: 'renderTg', MediaMgr: 'renderMedia', Announce: 'renderAnn', SecuritySet: 'renderSec' };
+    const RENDER = { Insights: 'renderIns', PidMgmt: 'renderPid', PriceMgmt: 'renderPrice', Suppliers: 'renderSup', Gateways: 'renderGw', ApiMgmt: 'renderApi', TelegramSet: 'renderTg', MediaMgr: 'renderMedia', Announce: 'renderAnn', SecuritySet: 'renderSec' };
     let axCur = '';
     const axRefresh = () => { const f = RENDER[axCur]; if (f && window[f]) { try { window[f](); } catch (e) { console.error(e); } } try { renderReport(); } catch (e) {} };
     const _sw = window.switchTab;
@@ -2395,6 +2452,98 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
         <h3 style="margin:14px 0 6px">Top products (tracked orders)</h3>${table(['Product', 'Qty', 'Sales'], tl, 'Abhi order data nahi')}`;
     };
 
+
+    /* ================= PLUS v3: Alerts & Channel, Insights, Quick Add packs ================= */
+    const ntApi = async (body) => {
+        const u = auth.currentUser; if (!u) throw new Error('Admin login nahi hai');
+        const tok = await u.getIdToken(); let r, j;
+        try { r = await fetch(API_BASE + '/api/admin/notify', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify(body) }); }
+        catch (e) { throw new Error('Backend server se connect nahi hua. Internet / server check karo.'); }
+        try { j = await r.json(); } catch (e) { throw new Error('Backend API nahi mila (HTTP ' + r.status + '). Site Render "Web Service" par deploy honi chahiye.'); }
+        if (!j.ok) throw new Error((j.error && j.error.message) || 'Request fail'); return j.data;
+    };
+    const NT_EVENTS = [['deposit', '💰 New deposit', 'Jab bhi koi deposit verify hoke wallet me credit hota hai'], ['purchase', '🔑 Key purchase', 'Key bikne par (key khud hamesha hidden rehti hai)'], ['reseller', '👑 New reseller', 'Koi user reseller bane (upgrade / free / admin)'], ['referral', '🤝 New referral', 'Referral link se naya member judne par'], ['commission', '🎁 Referral commission', 'Referrer ko commission milne par'], ['signup', '🆕 New signup', 'Har naya account banne par']];
+    let ntCfg = null, ntLogs = [], ntErr = '', ntBusy = false;
+    const ntLoad = async () => { try { const d = await ntApi({ action: 'get' }); ntCfg = d.config; ntErr = ''; try { ntLogs = await ntApi({ action: 'logs' }); } catch (e) { ntLogs = []; } } catch (e) { ntErr = e.message; } renderAlerts(); };
+    window.renderAlerts = () => {
+        const box = $id('ax-alerts'); if (!box) return;
+        if (!ntCfg) { box.innerHTML = `<div class="ax"><div class="glass"><h2 class="axt"><i class="fas fa-bell"></i> Alerts &amp; Channel</h2>${ntErr ? `<div class="ax-note"><i class="fas fa-triangle-exclamation"></i><div>${E(ntErr)}</div></div><button class="ax-btn" onclick="ntReload()"><i class="fas fa-rotate"></i> Retry</button>` : '<div style="color:#9aa0b5">Loading...</div>'}</div></div>`; return; }
+        const c = ntCfg; const ready = c.tokenSet && c.chatId; const live = ready && c.enabled;
+        box.innerHTML = `<div class="ax"><div class="glass"><h2 class="axt"><i class="fas fa-bell"></i> Alerts &amp; Channel</h2>
+        <div class="ax-note" style="border-color:${live ? '#2bff5a' : '#ffb020'}"><i class="fas ${live ? 'fa-circle-check' : 'fa-circle-info'}"></i><div><b>${live ? 'LIVE — alerts channel me ja rahe hain' : ready ? 'Setup ho gaya par alerts OFF hain' : 'Setup baaki hai'}</b><br>Deposit, key sale, reseller aur referral ke premium alerts Telegram channel me automatic jayenge. Bot token sirf server par rehta hai, browser/user ko kabhi nahi dikhta.</div></div>
+        <details class="ax-card" style="margin:12px 0"><summary style="cursor:pointer;font-weight:800">📘 Setup guide (4 steps)</summary><ol style="line-height:1.8;color:#c9ccd6;margin:10px 0 0 18px"><li>Telegram me <b>@BotFather</b> kholo → <code>/newbot</code> → bot token copy karo.</li><li>Apna <b>Channel</b> banao (ya purana use karo) → Channel Settings → Administrators → <b>bot ko Admin banao</b> (Post Messages ON).</li><li>Neeche <b>Bot token</b> aur <b>Channel ID</b> daalo (public channel: <code>@channelusername</code>, private: <code>-100xxxxxxxxxx</code>).</li><li><b>Save</b> dabao, phir <b>Test connection</b> — channel me sample alert aana chahiye. Last me <b>Alerts ON</b> karo.</li></ol></details>
+        <div class="ax-g">
+        ${fld('nt-en', '<b>Alerts ON</b> (master switch)', !!c.enabled, { type: 'check', full: 1 })}
+        ${fld('nt-tok', 'Bot token' + (c.tokenSet ? ` <span style="color:#2bff5a">(saved ${E(c.tokenHint)})</span>` : ''), '', { type: 'secret', full: 1, ph: c.tokenSet ? 'Blank chhodo = purana token rahega' : '123456789:AA...', hint: 'BotFather se mila token. Save ke baad dobara dikhega nahi.' })}
+        ${fld('nt-chat', 'Channel ID / username', c.chatId || '', { ph: '@mychannel ya -1001234567890', hint: 'Jahan alerts jayenge' })}
+        ${fld('nt-churl', 'Channel link (users ko dikhega)', c.channelUrl || '', { ph: 'https://t.me/mychannel', hint: 'User panel me "Join Channel" aur alert ke neeche button' })}
+        ${fld('nt-site', 'Website link ("Buy on My Website" button)', c.siteUrl || '', { ph: 'https://yourshop.com', hint: 'Har alert ke neeche ye button aayega' })}
+        ${fld('nt-brand', 'Brand name', c.brand || '')}
+        ${fld('nt-sbtn', 'Website button text', c.siteBtnText || '')}${fld('nt-cbtn', 'Channel button text', c.channelBtnText || '')}
+        ${fld('nt-foot', 'Premium footer line (har alert ke neeche)', c.footer || '', { full: 1 })}
+        ${fld('nt-mode', 'Username dikhana', c.userMode || 'mask', { type: 'select', opts: [['mask', 'Masked (ra*****r) — recommended'], ['full', 'Full username'], ['hide', 'Hidden User']] })}
+        ${fld('nt-min', 'Minimum deposit alert (₹)', c.minDeposit || 0, { type: 'number', min: 0, hint: '0 = sab deposit' })}
+        ${fld('nt-silent', 'Silent notifications (bina awaaz)', !!c.silent, { type: 'check', full: 1 })}
+        </div>
+        <div class="ax-note" style="margin:14px 0 8px"><i class="fas fa-sliders"></i><div><b>Kaunse alerts bhejne hain</b> — har event ka sample bhi bhej sakte ho.</div></div>
+        <div class="ax-g">${NT_EVENTS.map(([k, l, h]) => `<div class="ax-fld"><label class="ax-chk"><input type="checkbox" id="nt-ev-${k}" ${(c.events || {})[k] ? 'checked' : ''}> ${l}</label><div class="h">${h}</div><button class="ax-btn g s" style="margin-top:6px" onclick="ntTest('${k}')"><i class="fas fa-paper-plane"></i> Send sample</button></div>`).join('')}</div>
+        <div class="ax-row" style="margin:14px 0"><button class="ax-btn" onclick="ntSave()"><i class="fas fa-save"></i> Save settings</button><button class="ax-btn g" onclick="ntTest('deposit')"><i class="fas fa-plug"></i> Test connection</button>${c.channelUrl ? `<a class="ax-btn g" target="_blank" rel="noopener" href="${E(c.channelUrl)}"><i class="fab fa-telegram"></i> Open channel</a>` : ''}</div></div>
+        <div class="glass" style="margin-top:14px"><h2 class="axt"><i class="fas fa-bullhorn"></i> Broadcast to channel</h2><div class="ax-note"><i class="fas fa-circle-info"></i><div>Koi bhi custom announcement (sale, new product, maintenance) premium style me channel me post karo.</div></div>${fld('nt-bc', 'Message', '', { type: 'textarea', rows: 4, full: 1, ph: '🔥 Free Fire Panel par aaj 20% OFF!' })}<div class="ax-row" style="margin-top:10px"><button class="ax-btn" onclick="ntBroadcast()"><i class="fas fa-paper-plane"></i> Post to channel</button></div></div>
+        <div class="glass" style="margin-top:14px"><h2 class="axt"><i class="fas fa-list-check"></i> Delivery log</h2>${table(['Time', 'Event', 'Result'], ntLogs.slice(0, 20).map(l => [dt(l.ts), E(l.event), l.ok ? badge('SENT', 'ok') : badge('FAILED', 'err') + ' <small style="color:#9aa0b5">' + E(l.message || '') + '</small>']), 'Abhi koi alert nahi gaya')}<div class="ax-row" style="margin-top:10px"><button class="ax-btn g s" onclick="ntReload()"><i class="fas fa-rotate"></i> Refresh</button></div></div></div>`;
+    };
+    window.ntReload = () => { ntCfg = null; renderAlerts(); ntLoad(); };
+    const ntCollect = () => ({ enabled: val('nt-en'), botToken: val('nt-tok').trim(), chatId: val('nt-chat').trim(), channelUrl: val('nt-churl').trim(), siteUrl: val('nt-site').trim(), brand: val('nt-brand').trim(), siteBtnText: val('nt-sbtn').trim(), channelBtnText: val('nt-cbtn').trim(), footer: val('nt-foot').trim(), userMode: val('nt-mode'), minDeposit: val('nt-min'), silent: val('nt-silent'), events: Object.fromEntries(NT_EVENTS.map(([k]) => [k, val('nt-ev-' + k)])) });
+    window.ntSave = async () => { if (ntBusy) return; ntBusy = true; try { const d = await ntApi({ action: 'save', config: ntCollect() }); ntCfg = d.config; audit('alerts_settings', ntCfg.chatId); ok('Alert settings saved'); } catch (e) { bad(e.message); } ntBusy = false; renderAlerts(); };
+    window.ntTest = async (ev) => { if (ntBusy) return; ntBusy = true; try { await ntApi({ action: 'save', config: ntCollect() }); const r = await ntApi({ action: 'test', event: ev }); ok('✅ ' + r.steps.join(' → ')); } catch (e) { bad(e.message); } ntBusy = false; ntLoad(); };
+    window.ntBroadcast = async () => { const t = val('nt-bc').trim(); if (!t) return bad('Message likho'); if (!confirm('Ye message channel me post ho jayega. Continue?')) return; try { await ntApi({ action: 'broadcast', text: t }); ok('Channel me post ho gaya'); $id('nt-bc').value = ''; ntLoad(); } catch (e) { bad(e.message); } };
+
+    /* ----- Insights ----- */
+    const dayKey = (ts) => new Date(ts).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+    window.renderIns = () => {
+        const box = $id('ax-ins'); if (!box) return;
+        const pays = Object.entries(M.pay || {}).map(([id, p]) => ({ id, ...p })), ords = Object.entries(M.ord || {}).map(([id, o]) => ({ id, ...o }));
+        const okp = pays.filter(p => p.status === 'success' || p.credited), now = Date.now(), D = 86400000;
+        const sumIn = (arr, f, ts, days) => arr.filter(x => now - (Number(x[ts]) || 0) < days * D).reduce((s, x) => s + (Number(x[f]) || 0), 0);
+        const today = dayKey(now); const sumToday = (arr, f, ts) => arr.filter(x => dayKey(Number(x[ts]) || 0) === today).reduce((s, x) => s + (Number(x[f]) || 0), 0);
+        const card = (l, a, b, c, col) => `<div class="ax-stat"><b style="color:${col}">${a}</b><span>${l}</span><small style="color:#8a90a5;display:block;margin-top:3px">7d ${b} • 30d ${c}</small></div>`;
+        const days = [...Array(7)].map((_, i) => { const d = new Date(now - (6 - i) * D); const k = dayKey(d.getTime()); return { k: k.slice(5), dep: okp.filter(p => dayKey(Number(p.paidAt || p.createdAt) || 0) === k).reduce((s, p) => s + (Number(p.amount) || 0), 0), sale: ords.filter(o => dayKey(Number(o.ts) || 0) === k).reduce((s, o) => s + (Number(o.total) || 0), 0) }; });
+        const mx = Math.max(1, ...days.map(d => Math.max(d.dep, d.sale)));
+        const bars = days.map(d => `<div style="flex:1;text-align:center"><div style="height:110px;display:flex;align-items:flex-end;justify-content:center;gap:3px"><div title="Deposits ${money(d.dep)}" style="width:35%;height:${Math.max(2, d.dep / mx * 100)}%;background:linear-gradient(#2bff5a,#0a8a35);border-radius:5px 5px 0 0"></div><div title="Sales ${money(d.sale)}" style="width:35%;height:${Math.max(2, d.sale / mx * 100)}%;background:linear-gradient(#00e5ff,#7c5cff);border-radius:5px 5px 0 0"></div></div><small style="color:#8a90a5;font-size:10px">${d.k}</small></div>`).join('');
+        const grp = (key) => { const m = {}; ords.forEach(o => { const k = o[key] || '—'; m[k] = m[k] || { n: 0, t: 0 }; m[k].n += Number(o.qty) || 1; m[k].t += Number(o.total) || 0; }); return Object.entries(m).sort((a, b) => b[1].t - a[1].t).slice(0, 5); };
+        const review = pays.filter(p => p.needsReview || p.status === 'amount_mismatch');
+        box.innerHTML = `<div class="ax"><div class="glass"><h2 class="axt"><i class="fas fa-chart-pie"></i> Business Insights</h2>
+        <div class="ax-stats">${card('Deposits today', money(sumToday(okp, 'amount', 'paidAt')), money(sumIn(okp, 'amount', 'paidAt', 7)), money(sumIn(okp, 'amount', 'paidAt', 30)), '#2bff5a')}${card('Sales today', money(sumToday(ords, 'total', 'ts')), money(sumIn(ords, 'total', 'ts', 7)), money(sumIn(ords, 'total', 'ts', 30)), '#00e5ff')}${card('Profit today', money(sumToday(ords, 'profit', 'ts')), money(sumIn(ords, 'profit', 'ts', 7)), money(sumIn(ords, 'profit', 'ts', 30)), '#ffb020')}</div>
+        <div class="ax-card" style="margin-top:12px"><b>Last 7 days</b> <small style="color:#8a90a5">(<span style="color:#2bff5a">■</span> deposits <span style="color:#00e5ff">■</span> sales)</small><div style="display:flex;gap:6px;margin-top:10px">${bars}</div></div>
+        <div class="ax-g" style="margin-top:12px"><div><b>🏆 Top products</b>${table(['Product', 'Sold', 'Revenue'], grp('product').map(([k, v]) => [E(k), v.n, money(v.t)]), 'No sales yet')}</div><div><b>👑 Top buyers</b>${table(['User', 'Keys', 'Spent'], grp('username').map(([k, v]) => [E(k), v.n, money(v.t)]), 'No buyers yet')}</div></div>
+        ${review.length ? `<div class="ax-note" style="margin-top:12px;border-color:#ff3b3b"><i class="fas fa-triangle-exclamation"></i><div><b>${review.length} payment(s) need review</b><br>${review.slice(0, 5).map(p => E(`${p.username || p.uid} • ${money(p.amount)} • ${p.note || p.status}`)).join('<br>')}</div></div>` : ''}
+        <div class="ax-row" style="margin-top:14px"><button class="ax-btn g" onclick="insCsv('orders')"><i class="fas fa-file-csv"></i> Orders CSV</button><button class="ax-btn g" onclick="insCsv('payments')"><i class="fas fa-file-csv"></i> Payments CSV</button><button class="ax-btn g" onclick="insBackup()"><i class="fas fa-download"></i> Settings backup (JSON)</button></div></div></div>`;
+    };
+    const insDl = (name, text, type) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); };
+    const insCell = (c) => '"' + String(c ?? '').replace(/"/g, '""') + '"';
+    window.insCsv = (w) => { const rows = w === 'orders' ? [['time', 'user', 'product', 'duration', 'qty', 'total', 'source'], ...Object.values(M.ord || {}).map(o => [new Date(o.ts || 0).toISOString(), o.username, o.product, o.duration, o.qty, o.total, o.source])] : [['time', 'user', 'amount', 'status', 'gateway', 'reference'], ...Object.values(M.pay || {}).map(p => [new Date(p.createdAt || 0).toISOString(), p.username, p.amount, p.status, p.gatewayName, p.reference])]; insDl(w + '.csv', rows.map(r => r.map(insCell).join(',')).join('\n'), 'text/csv'); };
+    window.insBackup = () => insDl('aryan-settings-backup.json', JSON.stringify({ exportedAt: new Date().toISOString(), products: M.meta, prices: M.mgmt, suppliers: Object.fromEntries(Object.entries(M.sup || {}).map(([k, s]) => [k, { ...s, apiKey: undefined, masterKey: undefined }])), mappings: M.map, links: M.lkM, branding: M.brand, announcements: M.ann }, null, 2), 'application/json');
+
+    /* ----- Quick Add packs (Free Fire etc.) ----- */
+    const QA_PACKS = [
+        { id: 'ff', name: 'Free Fire Panel', game: 'FREE FIRE', tags: ['Free Fire', 'Panel'], badge: '', plans: [['1 Day', 49, 39], ['7 Days', 199, 169], ['30 Days', 499, 429]] },
+        { id: 'ffa', name: 'Free Fire Android Panel', game: 'FREE FIRE', tags: ['Free Fire', 'Android'], badge: '', plans: [['1 Day', 59, 49], ['7 Days', 229, 199], ['30 Days', 549, 479]] },
+        { id: 'ffi', name: 'Free Fire iOS Panel', game: 'FREE FIRE', tags: ['Free Fire', 'iOS'], badge: '', plans: [['1 Day', 79, 69], ['7 Days', 299, 259], ['30 Days', 699, 599]] }
+    ];
+    window.renderQa = () => {
+        const box = $id('ax-qa'); if (!box) return;
+        box.innerHTML = `<div class="ax"><div class="glass"><h2 class="axt"><i class="fas fa-bolt"></i> Quick Add Packs</h2><div class="ax-note"><i class="fas fa-circle-info"></i><div>Ready-made products ek click me store me add karo. Price apne hisaab se badlo (User / Reseller). Baad me <b>Edit Product</b> se image, video, PID wagairah set kar sakte ho.</div></div>
+        ${QA_PACKS.map(p => { const exists = !!(adminProductsCache || {})[pSlug(p.name)]; return `<div class="ax-card" style="margin-top:12px"><div class="ax-row" style="justify-content:space-between"><b>🎮 ${E(p.name)}</b>${exists ? badge('ALREADY ADDED', 'ok') : badge(p.game, '')}</div><div class="ax-g" style="margin-top:8px">${p.plans.map((pl, i) => `<div class="ax-fld"><label>${E(pl[0])} — User ₹ / Reseller ₹</label><div class="ax-row" style="flex-wrap:nowrap"><input class="ax-in" type="number" min="0" id="qa-${p.id}-u${i}" value="${pl[1]}"><input class="ax-in" type="number" min="0" id="qa-${p.id}-r${i}" value="${pl[2]}"></div></div>`).join('')}</div><div class="ax-row" style="margin-top:10px"><button class="ax-btn" ${exists ? 'disabled' : ''} onclick="qaAdd('${p.id}')"><i class="fas fa-plus"></i> Add to store</button></div></div>`; }).join('')}</div></div>`;
+    };
+    window.qaAdd = async (id) => {
+        const p = QA_PACKS.find(x => x.id === id); if (!p) return; if ((adminProductsCache || {})[pSlug(p.name)]) return bad('Ye product pehle se hai');
+        const plans = p.plans.map((pl, i) => ({ days: pl[0], price: parseFloat(val(`qa-${id}-u${i}`)), rprice: parseFloat(val(`qa-${id}-r${i}`)) }));
+        if (plans.some(x => !(x.price > 0) || !(x.rprice > 0))) return bad('Har plan ka User aur Reseller price daalo');
+        if (plans.some(x => x.rprice > x.price)) return bad('Reseller price User price se zyada nahi ho sakta');
+        try { await saveProductTo(null, { name: p.name, tags: p.tags, imageUrl: '', downloadUrl: '', supplierPid: '', game: p.game, features: 'Instant key delivery • 24x7 support', videoUrl: '', badge: p.badge, plans }); audit('quick_add', p.name); ok(p.name + ' add ho gaya!'); setTimeout(renderQa, 600); } catch (e) { bad('Add nahi hua'); }
+    };
+    { const _swp = window.switchTab; window.switchTab = (t) => { _swp(t); if (t === 'AlertsCh') { if (!ntCfg) ntLoad(); else renderAlerts(); } if (t === 'QuickAdd') renderQa(); }; }
+    window.apNotifyAdmin = (event, uid, via) => { try { fetch(API_BASE + '/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event, uid, via }), keepalive: true }).catch(() => {}); } catch (e) {} };
+
     }
 
     window.executeClipboardCopy = window.executeClipboardCopy || ((t) => { try { navigator.clipboard.writeText(t); showToast('Copied'); } catch (e) { showToast('Copy fail','error'); } });
@@ -2403,12 +2552,12 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
 /* ===== compact navigation: groups + search + quick bar ===== */
 (function () {
   const GROUPS = [
-    ['STORE', ['Dashboard', 'ProductManager', 'EditProduct', 'KeysStock', 'PidMgmt', 'PriceMgmt', 'Orders', 'Resellers']],
-    ['MONEY', ['Deposits', 'Gateways', 'Suppliers']],
-    ['TELEGRAM & API', ['TelegramSet', 'ApiMgmt']],
+    ['STORE', ['Dashboard', 'QuickAdd', 'ProductManager', 'EditProduct', 'KeysStock', 'PidMgmt', 'PriceMgmt', 'Orders', 'Resellers']],
+    ['MONEY', ['Insights', 'Deposits', 'Gateways', 'Suppliers']],
+    ['TELEGRAM & API', ['AlertsCh', 'TelegramSet', 'ApiMgmt']],
     ['SITE', ['Tickets', 'Links', 'MediaMgr', 'Announce', 'Maintenance', 'SecuritySet']]
   ];
-  const QUICK = [['Dashboard', 'Dashboard'], ['Orders', 'Orders'], ['Deposits', 'Deposits'], ['Gateways', 'Gateways'], ['Suppliers', 'Suppliers'], ['TG Bots'], ['PriceMgmt', 'Prices'], ['Tickets', 'Tickets']];
+  const QUICK = [['Dashboard', 'Dashboard'], ['Orders', 'Orders'], ['Deposits', 'Deposits'], ['Gateways', 'Gateways'], ['Suppliers', 'Suppliers'], ['AlertsCh', 'Alerts'], ['PriceMgmt', 'Prices'], ['Tickets', 'Tickets']];
   function build() {
     const list = document.querySelector('.sidebar-menu-list'); if (!list || list.dataset.done) return; list.dataset.done = 1;
     const items = {}; list.querySelectorAll('.sidebar-item[id^="menu-"]').forEach(el => items[el.id.slice(5)] = el);
@@ -2434,6 +2583,65 @@ html[data-theme] .sidebar-item.active-menu{background:linear-gradient(90deg,colo
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
 })();
+/* ================= ARYAN v3 CONSOLE — admin features ================= */
+(function () {
+  const A = { users: {}, stock: {}, prods: {}, tickets: {}, gws: {} };
+  const q = (id) => document.getElementById(id);
+  const E = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const M = (n) => '₹' + (Number(n) || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  const T = (t) => Number(t.ts) || (t.date ? Date.parse(t.date) : 0) || 0;
+  const dayStart = (o) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - o); return d.getTime(); };
+  function allTx() { const out = []; Object.entries(A.users).forEach(([uid, u]) => { if (!u) return; Object.values(u.transactions || {}).forEach(t => { if (t) out.push({ ...t, uid, username: u.username }); }); }); return out; }
+  function csv(name, rows) { const body = rows.map(r => r.map(c => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(',')).join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], { type: 'text/csv' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+  window.ax3Export = (k) => {
+    if (k === 'users') csv('users.csv', [['username', 'email', 'role', 'balance', 'status', 'keys', 'joined']].concat(Object.values(A.users).filter(Boolean).map(u => [u.username, u.email, u.role, u.balance, u.status || 'Active', u.keyCount || 0, u.joinedAt || ''])));
+    else csv('transactions.csv', [['date', 'username', 'type', 'amount', 'description']].concat(allTx().sort((a, b) => T(b) - T(a)).map(t => [t.date || new Date(T(t)).toISOString(), t.username, t.type, t.amount, t.description])));
+    window.showToast && showToast('CSV download ho gaya');
+  };
+  window.ax3Announce = async () => { const v = q('ax3-ann').value.trim().slice(0, 160); try { await update(ref(db, 'site_settings/links'), { announcement: v }); showToast(v ? 'Announcement live ho gaya' : 'Announcement hata diya'); } catch (e) { showToast('Fail hua', 'error'); } };
+  function build() {
+    const dash = q('view-Dashboard'); if (!dash || q('ax3')) return;
+    const w = document.createElement('div'); w.id = 'ax3';
+    w.innerHTML = `<div class="ax3-hero"><small>Console • live</small><h2 id="ax3-h">Overview</h2><div class="ax3-row">
+      <button class="ax3-b" onclick="switchTab('Orders')"><i class="fas fa-receipt"></i> Orders</button><button class="ax3-b" onclick="switchTab('Deposits')"><i class="fas fa-wallet"></i> Deposits</button><button class="ax3-b" onclick="switchTab('Resellers')"><i class="fas fa-users-cog"></i> Users</button><button class="ax3-b" onclick="switchTab('Tickets')"><i class="fas fa-headset"></i> Tickets</button><button class="ax3-b" onclick="switchTab('Gateways')"><i class="fas fa-credit-card"></i> Gateways</button></div></div>
+    <div class="ax3-kpis" id="ax3-k"></div>
+    <div class="ax3-card"><h3><i class="fas fa-chart-line" style="color:var(--ax-a)"></i> 14-day deposits vs sales</h3><div id="ax3-chart"></div></div>
+    <div class="ax3-2"><div class="ax3-card"><h3><i class="fas fa-trophy" style="color:var(--ax-c)"></i> Top resellers (spend)</h3><div class="ax3-list" id="ax3-top"></div></div>
+    <div class="ax3-card"><h3><i class="fas fa-fire" style="color:#ff8a5a"></i> Top products (30 days)</h3><div class="ax3-list" id="ax3-prod"></div></div></div>
+    <div class="ax3-2"><div class="ax3-card"><h3><i class="fas fa-triangle-exclamation" style="color:var(--ax-c)"></i> Low stock</h3><div class="ax3-list" id="ax3-low"></div></div>
+    <div class="ax3-card"><h3><i class="fas fa-bolt" style="color:var(--ax-a)"></i> Live feed</h3><div class="ax3-list" id="ax3-feed"></div></div></div>
+    <div class="ax3-card"><h3><i class="fas fa-bullhorn" style="color:var(--ax-b)"></i> Instant announcement</h3><div class="ax3-row"><input id="ax3-ann" maxlength="160" placeholder="Dashboard par chalti line (khali = band)" style="flex:1;min-width:180px;padding:11px 12px;background:rgba(255,255,255,.05);border:1px solid var(--ax-line);color:var(--ax-ice)"><button class="ax3-b" onclick="ax3Announce()"><i class="fas fa-paper-plane"></i> Publish</button></div></div>
+    <div class="ax3-card"><h3><i class="fas fa-file-export" style="color:var(--ax-a)"></i> Export</h3><div class="ax3-row"><button class="ax3-b ghost" onclick="ax3Export('users')"><i class="fas fa-users"></i> Users CSV</button><button class="ax3-b ghost" onclick="ax3Export('tx')"><i class="fas fa-file-csv"></i> Transactions CSV</button></div></div>`;
+    dash.insertBefore(w, dash.firstChild);
+  }
+  function paint() {
+    build(); if (!q('ax3-k')) return;
+    const us = Object.values(A.users).filter(Boolean), tx = allTx(), t0 = dayStart(0);
+    const dep = tx.filter(t => t.type === 'Deposit'), sale = tx.filter(t => t.type === 'Generation');
+    const sum = (a, f) => a.filter(f).reduce((s, t) => s + (Number(t.amount) || 0), 0);
+    const dToday = sum(dep, t => T(t) >= t0), sToday = sum(sale, t => T(t) >= t0), float = us.reduce((s, u) => s + (parseFloat(u.balance) || 0), 0);
+    const open = Object.values(A.tickets).filter(t => t && t.status === 'open').length, gOn = Object.values(A.gws).filter(g => g && g.enabled).length;
+    const hr = new Date().getHours(); q('ax3-h').textContent = (hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening') + ' — ' + M(dToday) + ' deposited today';
+    const K = [['Deposits today', M(dToday), 'fa-arrow-down', '#2ee6c5', dep.filter(t => T(t) >= t0).length + ' payments'], ['Sales today', M(sToday), 'fa-cart-shopping', '#5b7cff', sale.filter(t => T(t) >= t0).length + ' orders'], ['Wallet float', M(float), 'fa-vault', '#ffc857', us.length + ' accounts'], ['Resellers', us.filter(u => u.role === 'Reseller').length, 'fa-crown', '#ff8a5a', us.filter(u => u.status === 'Banned').length + ' banned'], ['Open tickets', open, 'fa-headset', open ? '#ff6a6a' : '#2ee6c5', open ? 'need reply' : 'all clear'], ['Gateways ON', gOn, 'fa-credit-card', gOn ? '#2ee6c5' : '#ff6a6a', gOn ? 'accepting UPI' : 'NO auto-pay!'], ['Deposits (all)', M(sum(dep, () => 1)), 'fa-sack-dollar', '#2ee6c5', dep.length + ' total'], ['Sales (all)', M(sum(sale, () => 1)), 'fa-chart-pie', '#5b7cff', sale.length + ' total']];
+    q('ax3-k').innerHTML = K.map(k => `<div class="ax3-k" style="--c:${k[3]}"><i class="fas ${k[2]}"></i><small>${k[0]}</small><b>${k[1]}</b><em>${k[4]}</em></div>`).join('');
+    const days = [...Array(14)].map((_, i) => dayStart(13 - i)), W = 640, H = 150, bw = W / 14;
+    const dv = days.map(d => sum(dep, t => T(t) >= d && T(t) < d + 864e5)), sv = days.map(d => sum(sale, t => T(t) >= d && T(t) < d + 864e5)), mx = Math.max(1, ...dv, ...sv);
+    q('ax3-chart').innerHTML = `<svg viewBox="0 0 ${W} ${H + 22}" style="width:100%;height:auto"><defs><linearGradient id="axg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ee6c5"/><stop offset="1" stop-color="#12957f"/></linearGradient><linearGradient id="axg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b96ff"/><stop offset="1" stop-color="#3b55d9"/></linearGradient></defs>${days.map((d, i) => { const a = dv[i] / mx * H, b = sv[i] / mx * H, x = i * bw; return `<rect x="${x + 5}" y="${H - a}" width="${bw / 2 - 6}" height="${Math.max(2, a)}" rx="4" fill="url(#axg1)"/><rect x="${x + bw / 2}" y="${H - b}" width="${bw / 2 - 6}" height="${Math.max(2, b)}" rx="4" fill="url(#axg2)"/><text x="${x + bw / 2}" y="${H + 15}" fill="#8aa0ad" font-size="11" text-anchor="middle">${new Date(d).getDate()}</text>`; }).join('')}</svg><div style="font-size:11px;color:var(--ax-mut);margin-top:6px"><span style="color:#2ee6c5">■</span> Deposits &nbsp; <span style="color:#7b96ff">■</span> Sales</div>`;
+    const spend = {}; sale.forEach(t => { spend[t.username || t.uid] = (spend[t.username || t.uid] || 0) + (Number(t.amount) || 0); });
+    const top = Object.entries(spend).sort((a, b) => b[1] - a[1]).slice(0, 5), tm = top[0] ? top[0][1] : 1;
+    q('ax3-top').innerHTML = top.length ? top.map(([n, v], i) => `<div><span>#${i + 1} @${E(n)}<span class="ax3-bar" style="display:block"><i style="width:${v / tm * 100}%"></i></span></span><span class="ax3-p">${M(v)}</span></div>`).join('') : '<div>Abhi koi sale nahi</div>';
+    const pc = {}; const m30 = dayStart(30); us.forEach(u => Object.values(u.generatedKeys || {}).forEach(k => { if (k && (Date.parse(k.timestamp) || 0) >= m30) pc[k.product] = (pc[k.product] || 0) + 1; }));
+    const tp = Object.entries(pc).sort((a, b) => b[1] - a[1]).slice(0, 5); q('ax3-prod').innerHTML = tp.length ? tp.map(([n, c]) => `<div><span>${E(n)}</span><span class="ax3-p">${c} keys</span></div>`).join('') : '<div>Data aate hi yahan dikhega</div>';
+    const low = []; Object.entries(A.stock).forEach(([pk, plans]) => Object.entries(plans || {}).forEach(([pl, keys]) => { const n = keys && typeof keys === 'object' ? Object.keys(keys).length : 0; if (n < 5) low.push([((A.prods[pk] || {}).name || pk), pl, n]); }));
+    q('ax3-low').innerHTML = low.length ? low.sort((a, b) => a[2] - b[2]).slice(0, 6).map(l => `<div><span>${E(l[0])}<small>${E(l[1])}</small></span><span class="ax3-pill ${l[2] ? '' : 'bad'}">${l[2]} left</span></div>`).join('') : '<div>Sab stock theek hai ✅</div>';
+    q('ax3-feed').innerHTML = tx.filter(t => t.type === 'Deposit' || t.type === 'Generation').sort((a, b) => T(b) - T(a)).slice(0, 7).map(t => `<div><span>@${E(t.username)}<small>${E(String(t.description || t.type).slice(0, 34))}</small></span><span class="${t.type === 'Deposit' ? 'ax3-p' : 'ax3-n'}">${t.type === 'Deposit' ? '+' : '−'}${M(t.amount)}</span></div>`).join('') || '<div>Abhi koi activity nahi</div>';
+  }
+  let tmr; const soon = () => { clearTimeout(tmr); tmr = setTimeout(() => { try { paint(); } catch (e) { console.warn('ax3', e); } }, 150); };
+  [['users', 'users'], ['key_stock', 'stock'], ['store_products', 'prods'], ['tickets', 'tickets'], ['payment_gateways', 'gws']].forEach(([p, k]) => onValue(ref(db, p), s => { A[k] = s.val() || {}; soon(); }, () => {}));
+  onValue(ref(db, 'site_settings/links'), s => { const i = q('ax3-ann'); if (i && document.activeElement !== i) i.value = (s.val() || {}).announcement || ''; }, () => {});
+  build();
+})();
+
 </script>
 </body>
 </html>
