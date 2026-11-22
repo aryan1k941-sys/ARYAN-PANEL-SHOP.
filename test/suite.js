@@ -1,4 +1,5 @@
 'use strict';
+process.env.ADMIN_SESSION_REQUIRED = '0'; process.env.ADMIN_AUTOBAN = '0'; // legacy tests exercise endpoints directly; security flow is tested in test/adminsec.js
 // Runs against: real server.js + real lib/*, with MOCK Firebase REST, MOCK identity service and MOCK HTTPS gateways.
 // (Real gateway credentials / docs are NOT available here, so no real gateway is contacted.)
 const fs = require('fs'), path = require('path');

@@ -20,7 +20,7 @@ export const getDatabase = () => ({});
 const AUTH = { get currentUser() { return G.user || null; } };
 G.fire = fire; G.setAt = setAt;
 export const getAuth = () => AUTH;
-export const onAuthStateChanged = (a, cb) => { setTimeout(() => cb(G.user || null), 5); return () => {}; };
+export const onAuthStateChanged = (a, cb) => { (G.authCbs = G.authCbs || []).push(cb); G.fireAuth = () => G.authCbs.forEach(f => f(G.user || null)); setTimeout(() => cb(G.user || null), 5); return () => {}; };
 export const signInWithEmailAndPassword = async () => { throw new Error('stub'); };
 export const signOut = async () => { G.user = null; }; export class GoogleAuthProvider {} export const signInWithPopup = async () => { throw new Error('stub'); };
 export const ref = (db, path = '') => ({ path: seg(path).join('/'), key: seg(path).pop() || null });
@@ -36,3 +36,5 @@ export const runTransaction = async (r, fn) => { const cur = clone(getAt(r.path)
 export const serverTimestamp = () => Date.now();
 export const query = (r) => r; export const orderByChild = () => null; export const equalTo = () => null; export const limitToLast = () => null; export const orderByKey=()=>null;
 export const getStorage = () => ({}); export const uploadBytes = async () => ({}); export const uploadBytesResumable = () => ({}); export const getDownloadURL = async () => 'https://example.com/x.png'; export const deleteObject = async () => {}; export const listAll = async () => ({ items: [], prefixes: [] });
+
+export const updatePassword = async (u, p) => { G.pwChanged = p; }; export const reauthenticateWithCredential = async (u, c) => { if (c.password !== (G.adminPw || 'AdminPass#1')) { const e = new Error('auth/invalid-credential'); e.code = 'auth/invalid-credential'; throw e; } }; export const EmailAuthProvider = { credential: (email, password) => ({ email, password }) };

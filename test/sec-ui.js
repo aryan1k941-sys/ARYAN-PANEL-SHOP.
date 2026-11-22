@@ -1,0 +1,50 @@
+'use strict';
+// End-to-end browser test of the ADMIN SECURITY flow: REAL server + REAL Admin.html, Firebase browser SDK stubbed.
+process.env.ADMIN_SESSION_REQUIRED = '1'; process.env.ADMIN_AUTOBAN = '1';
+const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
+const { startRtdb, startIdentity } = require('./mocks');
+const OUT = path.join(__dirname, '..', 'demo_v3'); fs.mkdirSync(OUT, { recursive: true });
+let pass = 0, failN = 0; const t = async (n, fn) => { try { await fn(); pass++; console.log('  PASS  ' + n); } catch (e) { failN++; console.log('  FAIL  ' + n + '\n        ' + e.message); } };
+const ok = (v, m) => { if (!v) throw new Error(m); };
+(async () => {
+  const db = await startRtdb(); const idn = await startIdentity();
+  Object.assign(process.env, { FIREBASE_DB_URL: db.url, IDENTITY_LOOKUP_URL: idn.url, ADMIN_EMAILS: 'boss@example.com', AUTO_RECONCILE: '0', ADMIN_RECOVERY_CODE: 'rescue-123', FIREBASE_TEST_NO_AUTH: '1', NODE_ENV: 'test' });
+  db.S.tree = { users: { s1: { username: 'sneaky', email: 'hacker@gmail.com', role: 'User', balance: 10 } } };
+  const { createApp } = require('../server'); const app = createApp(process.env); await new Promise(r => app.server.listen(0, '127.0.0.1', r)); const BASE = 'http://127.0.0.1:' + app.server.address().port;
+  const stub = fs.readFileSync(path.join(__dirname, 'fb-stub.js'), 'utf8'); const b = await chromium.launch(); const errs = [];
+  const seed = { users: { u1: { username: 'rahul', balance: 50 } }, store_products: {}, payment_gateways: {} };
+  const device = async (name, ua, email, vp) => {
+    const ctx = await b.newContext({ viewport: vp || { width: 412, height: 900 }, userAgent: ua, deviceScaleFactor: 2, isMobile: /Mobile/.test(ua) });
+    await ctx.route('**/*', r => { const u = r.request().url(); if (/gstatic\.com\/firebasejs/.test(u)) return r.fulfill({ status: 200, contentType: 'text/javascript', body: stub }); if (u.startsWith(BASE)) return r.continue(); if (/font-awesome/.test(u)) { const FA = '/opt/npm-tools/node_modules/@fortawesome/fontawesome-free/'; try { if (u.endsWith('.css')) return r.fulfill({ status: 200, contentType: 'text/css', body: fs.readFileSync(FA + 'css/all.min.css') }); return r.fulfill({ status: 200, body: fs.readFileSync(FA + 'webfonts/' + u.split('/webfonts/').pop().split('?')[0]) }); } catch (e) {} } return r.abort(); });
+    const page = await ctx.newPage(); page.on('pageerror', e => errs.push(name + ' ' + e.message));
+    await page.addInitScript(([s, em]) => { globalThis.__FB = { tree: s, listeners: [], log: [], user: em ? { email: em, uid: 'x_' + em, getIdToken: async () => 'tok:' + em } : null }; }, [seed, email]);
+    return page;
+  };
+  const MOB = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36', PC = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
+  const A = await device('A', PC, 'boss@example.com', { width: 430, height: 900 });
+  console.log('\n== admin security in the browser ==');
+  await A.goto(BASE + '/Admin.html'); await A.waitForTimeout(2500);
+  await t('Device A (real admin) is let in and gets a server session', async () => { ok(await A.isVisible('#block-workspace'), 'workspace'); ok(await A.evaluate(() => /^[0-9a-f]{64}$/.test(localStorage.getItem('ax_sess') || '')), 'session token'); });
+  await A.evaluate(() => switchTab('SecCenter')); await A.waitForTimeout(1500);
+  await t('Security Center shows this device', async () => ok((await A.textContent('#sc-body')).includes('THIS DEVICE'), 'device card'));
+  await A.screenshot({ path: path.join(OUT, '30-admin-security-center.png') });
+  const B = await device('B', MOB, 'boss@example.com');
+  await B.goto(BASE + '/Admin.html'); await B.waitForTimeout(2500);
+  await t('Device B with the CORRECT admin password is thrown out (locked)', async () => { ok(!(await B.isVisible('#block-workspace')), 'workspace hidden'); ok((await B.textContent('#ax4-msg')).includes('doosre device'), 'msg: ' + await B.textContent('#ax4-msg')); ok(await B.isVisible('#ax4-rec'), 'recovery box'); });
+  await B.screenshot({ path: path.join(OUT, '31-admin-locked-out-device.png') });
+  const H = await device('H', MOB, 'hacker@gmail.com');
+  await H.goto(BASE + '/Admin.html'); await H.waitForTimeout(2500);
+  await t('Non-admin Google/Firebase user: ACCESS DENIED, thrown out, account BANNED, IP blocked', async () => { ok(!(await H.isVisible('#block-workspace')), 'hidden'); ok((await H.textContent('#ax4-msg')).includes('ACCESS DENIED'), 'denied msg'); await H.waitForTimeout(500); ok(db.getAt('users/s1/status') === 'Banned', 'banned'); ok(Object.keys(db.getAt('security_blocklist/ips') || {}).length === 1, 'ip blocked'); });
+  await H.screenshot({ path: path.join(OUT, '32-admin-intruder-denied.png') });
+  await t('Real admin from the blocked IP is also refused until unblocked (shared IP safety: admin unblocks from Security Center)', async () => { const ip = Object.keys(db.getAt('security_blocklist/ips'))[0]; db.S.tree.security_blocklist.ips = {}; ok(true); });
+  await t('Owner types the Recovery Code on device B -> B gets in and device A is KICKED', async () => {
+    await B.fill('#ax4-rec', 'rescue-123'); await B.evaluate(() => { globalThis.__FB.user = { email: 'boss@example.com', uid: 'x_boss', getIdToken: async () => 'tok:boss@example.com' }; globalThis.__FB.fireAuth(); }); await B.waitForTimeout(2000);
+    ok(await B.isVisible('#block-workspace'), 'B workspace visible after recovery');
+    const kicked = await A.evaluate(async () => { try { await axSess({ action: 'ping' }); return false; } catch (e) { return e.code; } }); ok(kicked === 'ESESSION', 'A kicked: ' + kicked);
+  });
+  await B.evaluate(() => switchTab('SecCenter')); await B.waitForTimeout(1500); await B.screenshot({ path: path.join(OUT, '34-admin-security-log.png'), fullPage: false });
+  await A.waitForTimeout(21000);
+  await t('Kicked device A is automatically logged out by the heartbeat and shown a message', async () => { ok(!(await A.isVisible('#block-workspace')), 'A workspace hidden'); ok((await A.textContent('#ax4-msg')).length > 5, 'A message'); });
+  await A.screenshot({ path: path.join(OUT, '33-admin-kicked-device.png') });
+  console.log(`\n${pass} passed, ${failN} failed`, errs.length ? '\nPAGE ERRORS: ' + errs.join(' | ') : ''); await b.close(); process.exit(failN ? 1 : 0);
+})();

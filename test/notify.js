@@ -1,4 +1,5 @@
 'use strict';
+process.env.ADMIN_SESSION_REQUIRED = '0'; process.env.ADMIN_AUTOBAN = '0'; // legacy tests exercise endpoints directly; security flow is tested in test/adminsec.js
 // Telegram channel alerts against: real server.js + lib/notify.js, MOCK Firebase, MOCK identity, MOCK Telegram (HTTPS).
 const fs = require('fs'), https = require('https');
 const { startRtdb, startIdentity } = require('./mocks');
