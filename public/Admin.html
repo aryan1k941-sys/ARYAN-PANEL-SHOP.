@@ -607,6 +607,28 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .ax3-hero small{color:var(--ax-mut)}.ax3-hero h2{font-family:'Sora','Poppins',sans-serif;font-size:26px;margin:4px 0 12px}
 @media(min-width:760px){.ax3-kpis{grid-template-columns:repeat(4,1fr)}.ax3-2{grid-template-columns:1fr 1fr}}
 
+/* ---- Security Center ---- */
+.sc-hero{border-radius:22px;padding:18px;margin-bottom:14px;border:1px solid rgba(46,230,197,.35);background:radial-gradient(120% 140% at 100% 0%,rgba(46,230,197,.25),transparent 55%),linear-gradient(160deg,#0c2430,#08121b)}
+.sc-hero.warn{border-color:rgba(255,106,90,.5);background:radial-gradient(120% 140% at 100% 0%,rgba(255,106,90,.28),transparent 55%),linear-gradient(160deg,#2a1218,#10090d)}
+.sc-hero h2{font-size:20px;margin:6px 0 4px;text-transform:none!important}.sc-hero p{font-size:12px;color:var(--ax-mut)}
+.sc-shield{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:var(--ax-btn);color:var(--ax-btn-ink)}
+.sc-dev{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--ax-line);margin-bottom:9px}
+.sc-dev.me{border-color:rgba(46,230,197,.5);background:rgba(46,230,197,.07)}
+.sc-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-size:18px;flex:none;color:var(--ax-a)}
+.sc-dev b{font-size:13.5px;display:block}.sc-dev small{display:block;color:var(--ax-mut);font-size:11px;line-height:1.5}
+.sc-dev .ax3-b{margin-left:auto;padding:8px 11px;font-size:11.5px}
+.sc-seg{display:flex;gap:8px;margin:6px 0 12px}.sc-seg button{flex:1;padding:11px 8px;border-radius:12px;border:1px solid var(--ax-line);background:rgba(255,255,255,.05);color:var(--ax-ice);font-weight:700;font-size:12px;cursor:pointer}
+.sc-seg button.on{background:var(--ax-btn);color:var(--ax-btn-ink);border:0;box-shadow:var(--ax-btn-sh)}
+.sc-f{width:100%;padding:12px 13px;margin-bottom:9px;background:rgba(255,255,255,.05);border:1px solid var(--ax-line);color:var(--ax-ice);font-size:14px}
+.sc-lbl{font-size:11.5px;color:var(--ax-mut);margin:4px 0 5px;display:block}
+.sc-ev{display:flex;gap:10px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04);margin-bottom:7px;font-size:12px;border-left:3px solid #4a6270}
+.sc-ev.warn{border-left-color:#ffc857}.sc-ev.critical{border-left-color:#ff5a4a;background:rgba(255,90,74,.1)}.sc-ev.info{border-left-color:#2ee6c5}
+.sc-ev b{display:block;font-size:12px}.sc-ev small{color:var(--ax-mut);font-size:10.5px;display:block}
+.sc-chk div{display:flex;justify-content:space-between;gap:8px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04);margin-bottom:7px;font-size:12px}
+.sc-ok{color:var(--ax-a);font-weight:800}.sc-no{color:#ff8a7a;font-weight:800}
+#ax4-msg{margin:10px 0;padding:12px 14px;border-radius:14px;font-size:13px;font-weight:600;background:rgba(255,90,74,.14);border:1px solid rgba(255,90,74,.5);color:#ffb3a8;line-height:1.5}
+#ax4-rec{width:100%;margin:0 0 10px;padding:13px;border-radius:12px;border:1px solid rgba(255,200,87,.5);background:rgba(255,255,255,.05);color:#fff;font-size:14px}
+
 </style>
 </head>
 <body>
@@ -702,7 +724,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <div class="sidebar-item" id="menu-TelegramSet" onclick="switchTab('TelegramSet')"><i class="fab fa-telegram"></i> Telegram Bot</div>
             <div class="sidebar-item" id="menu-MediaMgr" onclick="switchTab('MediaMgr')"><i class="fas fa-photo-film"></i> Media, Videos &amp; Branding</div>
             <div class="sidebar-item" id="menu-Announce" onclick="switchTab('Announce')"><i class="fas fa-bullhorn"></i> Announcements</div>
-            <div class="sidebar-item" id="menu-SecuritySet" onclick="switchTab('SecuritySet')"><i class="fas fa-shield-halved"></i> Admin &amp; Security</div>
+            <div class="sidebar-item" id="menu-SecCenter" onclick="switchTab('SecCenter')"><i class="fas fa-user-shield"></i> Security Center</div>
+<div class="sidebar-item" id="menu-SecuritySet" onclick="switchTab('SecuritySet')"><i class="fas fa-shield-halved"></i> Admin &amp; Security</div>
 
             <div class="sidebar-item menu-logout-btn" onclick="triggerAdminLogout()"><i class="fas fa-sign-out-alt"></i> Logout Session</div>
         </div>
@@ -770,6 +793,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <div class="tab-view-section hidden" id="view-TelegramSet"><div id="ax-tg"></div></div>
         <div class="tab-view-section hidden" id="view-MediaMgr"><div id="ax-media"></div></div>
         <div class="tab-view-section hidden" id="view-Announce"><div id="ax-ann"></div></div>
+        <div class="tab-view-section hidden" id="view-SecCenter"></div>
         <div class="tab-view-section hidden" id="view-SecuritySet"><div id="ax-sec"></div></div>
 
         <div class="tab-view-section hidden" id="view-ProductManager">
@@ -1042,7 +1066,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, update, push, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
   apiKey: "AIzaSyDh8_kBDSXrbHbqYwXgjYRFP0loNmbQQqM",
@@ -1095,17 +1119,51 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     };
 
     // SPEED LOADING INITIALIZATION SCRIPT
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
+    /* ===== ADMIN SECURITY GATE: Firebase login alone is NOT enough; the server must approve this device ===== */
+    const AXS_BASE = ((document.querySelector('meta[name="api-base"]') || {}).content || '').replace(/\/$/, '');
+    const AXS_KEY = 'ax_sess';
+    const _origFetch = window.fetch.bind(window);
+    window.fetch = (u, o = {}) => { try { if (String(u).includes('/api/admin/')) { const t = localStorage.getItem(AXS_KEY); if (t) o = { ...o, headers: { ...(o.headers || {}), 'X-Admin-Session': t } }; } } catch (e) {} return _origFetch(u, o); };
+    window.axAuth = auth; window.axReauth = (u, pw) => reauthenticateWithCredential(u, EmailAuthProvider.credential(u.email, pw)); window.axUpdatePw = (u, pw) => updatePassword(u, pw);
+    window.axSess = async (body) => {
+        const u = auth.currentUser; if (!u) throw Object.assign(new Error('Login nahi hai'), { code: 'ESESSION' });
+        const tok = await u.getIdToken(); let r, j;
+        try { r = await fetch(AXS_BASE + '/api/admin/session', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify(body) }); j = await r.json(); }
+        catch (e) { throw Object.assign(new Error('Server se connect nahi ho paya'), { code: 'ENET' }); }
+        if (!j || !j.ok) throw Object.assign(new Error((j && j.error && j.error.message) || 'Server error'), { code: j && j.error && j.error.code, status: r.status });
+        return j.data;
+    };
+    let axBeat = null;
+    function axShowMsg(msg, code) {
+        let m = document.getElementById('ax4-msg'); const btn = document.getElementById('btn-submit-auth');
+        if (!m) { m = document.createElement('div'); m.id = 'ax4-msg'; btn.parentNode.insertBefore(m, btn); }
+        m.textContent = msg; m.style.display = msg ? '' : 'none';
+        let rec = document.getElementById('ax4-rec');
+        if (code === 'ELOCKED') { if (!rec) { rec = document.createElement('input'); rec.id = 'ax4-rec'; rec.type = 'password'; rec.placeholder = 'Emergency Recovery Code (sirf aap ke paas)'; btn.parentNode.insertBefore(rec, btn); } }
+        else if (rec && code !== 'keep') rec.remove();
+    }
+    window.axForceLogout = async (msg) => { clearInterval(axBeat); try { localStorage.removeItem(AXS_KEY); } catch (e) {} try { await signOut(auth); } catch (e) {} document.getElementById('block-workspace').classList.add('hidden'); document.getElementById('block-auth-screen').classList.remove('hidden'); axShowMsg(msg || 'Session khatam. Dobara login karo.', 'x'); };
+    function axStartBeat() { clearInterval(axBeat); axBeat = setInterval(async () => { try { await window.axSess({ action: 'ping' }); } catch (e) { if (e.code === 'ESESSION' || e.code === 'EBLOCKED' || e.code === 'EFORBIDDEN') { window.axForceLogout('Aapko is device se logout kar diya gaya (' + e.message + ')'); setTimeout(() => location.reload(), 1800); } } }, 20000); }
+    async function axGate(user) {
+        showSpeedLoader('SECURITY CHECK...');
+        try {
+            let ok = false;
+            if (localStorage.getItem(AXS_KEY)) { try { await window.axSess({ action: 'ping' }); ok = true; } catch (e) { if (e.code !== 'ESESSION') throw e; localStorage.removeItem(AXS_KEY); } }
+            if (!ok) { const rec = (document.getElementById('ax4-rec') || {}).value || ''; const d = await window.axSess({ action: 'login', recoveryCode: rec }); localStorage.setItem(AXS_KEY, d.sessionToken); }
             document.getElementById('user-display-email').innerText = user.email;
             document.getElementById('block-auth-screen').classList.add('hidden');
             document.getElementById('block-workspace').classList.remove('hidden');
-            initializeDashboardSync();
-        } else {
-            document.getElementById('block-workspace').classList.add('hidden');
-            document.getElementById('block-auth-screen').classList.remove('hidden');
+            axShowMsg('', 'x'); initializeDashboardSync(); axStartBeat();
+        } catch (e) {
+            try { await signOut(auth); } catch (x) {}
+            document.getElementById('block-workspace').classList.add('hidden'); document.getElementById('block-auth-screen').classList.remove('hidden');
+            axShowMsg(e.code === 'EFORBIDDEN' ? 'ACCESS DENIED: Ye account admin nahi hai. Aapki details record ho gayi hain aur account block kiya ja sakta hai.' : e.message, e.code);
         }
         hideSpeedLoader();
+    }
+    onAuthStateChanged(auth, (user) => {
+        if (user) { axGate(user); }
+        else { document.getElementById('block-workspace').classList.add('hidden'); document.getElementById('block-auth-screen').classList.remove('hidden'); hideSpeedLoader(); }
     });
 
     document.getElementById('btn-submit-auth').onclick = async () => {
@@ -1113,12 +1171,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         const pass = document.getElementById('txt-login-pass').value.trim();
         if(!email || !pass) return showToast("Please enter Gmail and Password!", "error");
         
+        const lk = Number(localStorage.getItem('ax_lock') || 0); if (Date.now() < lk) return showToast('Bahut galat try. ' + Math.ceil((lk - Date.now()) / 60000) + ' min baad try karo.', 'error');
         showSpeedLoader("VERIFYING CREDENTIALS...");
         try {
             await signInWithEmailAndPassword(auth, email, pass);
-            showToast("Firebase Authentication Successful!");
+            localStorage.removeItem('ax_fail');
         } catch(err) {
-            showToast("Incorrect Gmail or Password!", "error");
+            const f = Number(localStorage.getItem('ax_fail') || 0) + 1; localStorage.setItem('ax_fail', f);
+            if (f >= 5) { localStorage.setItem('ax_lock', Date.now() + 5 * 60000); localStorage.setItem('ax_fail', 0); showToast('5 galat try — 5 minute ke liye lock', 'error'); } else showToast("Incorrect Gmail or Password! (" + (5 - f) + " try bache)", "error");
             hideSpeedLoader();
         }
     };
@@ -1126,7 +1186,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     window.triggerAdminLogout = async () => {
         if(confirm("Exit securely and terminate session?")) {
             showSpeedLoader("TERMINATING SESSION...");
-            try { await signOut(auth); showToast("Session disconnected."); } catch (e) { } finally { hideSpeedLoader(); }
+            try { try { await window.axSess({ action: 'logout' }); } catch (e) {} clearInterval(axBeat); localStorage.removeItem(AXS_KEY); await signOut(auth); showToast("Session disconnected."); } catch (e) { } finally { hideSpeedLoader(); }
         }
     };
 
@@ -2552,12 +2612,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 /* ===== compact navigation: groups + search + quick bar ===== */
 (function () {
   const GROUPS = [
+    ['SECURITY', ['SecCenter']],
     ['STORE', ['Dashboard', 'QuickAdd', 'ProductManager', 'EditProduct', 'KeysStock', 'PidMgmt', 'PriceMgmt', 'Orders', 'Resellers']],
     ['MONEY', ['Insights', 'Deposits', 'Gateways', 'Suppliers']],
     ['TELEGRAM & API', ['AlertsCh', 'TelegramSet', 'ApiMgmt']],
     ['SITE', ['Tickets', 'Links', 'MediaMgr', 'Announce', 'Maintenance', 'SecuritySet']]
   ];
-  const QUICK = [['Dashboard', 'Dashboard'], ['Orders', 'Orders'], ['Deposits', 'Deposits'], ['Gateways', 'Gateways'], ['Suppliers', 'Suppliers'], ['AlertsCh', 'Alerts'], ['PriceMgmt', 'Prices'], ['Tickets', 'Tickets']];
+  const QUICK = [['SecCenter', 'Security'], ['Dashboard', 'Dashboard'], ['Orders', 'Orders'], ['Deposits', 'Deposits'], ['Gateways', 'Gateways'], ['Suppliers', 'Suppliers'], ['AlertsCh', 'Alerts'], ['PriceMgmt', 'Prices'], ['Tickets', 'Tickets']];
   function build() {
     const list = document.querySelector('.sidebar-menu-list'); if (!list || list.dataset.done) return; list.dataset.done = 1;
     const items = {}; list.querySelectorAll('.sidebar-item[id^="menu-"]').forEach(el => items[el.id.slice(5)] = el);
@@ -2640,6 +2701,57 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
   [['users', 'users'], ['key_stock', 'stock'], ['store_products', 'prods'], ['tickets', 'tickets'], ['payment_gateways', 'gws']].forEach(([p, k]) => onValue(ref(db, p), s => { A[k] = s.val() || {}; soon(); }, () => {}));
   onValue(ref(db, 'site_settings/links'), s => { const i = q('ax3-ann'); if (i && document.activeElement !== i) i.value = (s.val() || {}).announcement || ''; }, () => {});
   build();
+})();
+
+/* ================= ARYAN v3 SECURITY CENTER (admin) ================= */
+(function () {
+  const q = (id) => document.getElementById(id);
+  const E = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const ago = (t) => { const s = Math.max(0, Math.round((Date.now() - t) / 1000)); return s < 60 ? s + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? Math.round(s / 3600) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+  let S = null, timer = null;
+  const label = { login: 'Admin login', login_blocked: 'Login BLOCKED (doosra device)', session_replaced: 'Session replace hua', recovery_login: 'Recovery code login', intruder_blocked: 'INTRUDER blocked & banned', session_revoked: 'Device kick', sessions_revoked_all: 'Others logged out', panic_logout: 'PANIC logout', settings_changed: 'Security settings badli', password_changed: 'Admin password badla', ip_changed: 'IP change — session kill', session_expired: 'Idle logout', unblocked: 'IP unblock', session_mismatch: 'Session mismatch' };
+  async function load() { try { S = await window.axSess({ action: 'status' }); paint(); } catch (e) { if (e.code !== 'ESESSION') { const b = q('sc-body'); if (b) b.innerHTML = '<div class="ax3-card">Security data load nahi hua: ' + E(e.message) + '</div>'; } } }
+  function paint() {
+    const b = q('sc-body'); if (!b || !S) return;
+    const crit = S.events.filter(e => e.severity === 'critical' && Date.now() - e.ts < 86400000);
+    const st = S.settings;
+    b.innerHTML = `
+    <div class="sc-hero ${crit.length ? 'warn' : ''}"><div style="display:flex;gap:12px;align-items:center"><div class="sc-shield"><i class="fas fa-${crit.length ? 'triangle-exclamation' : 'shield-halved'}"></i></div><div><small style="color:var(--ax-mut)">Security status</small><h2>${crit.length ? crit.length + ' threat(s) in last 24h' : 'Protected — only you can get in'}</h2></div></div>
+      <p>${S.sessions.length} active device • policy: <b>${st.policy === 'lock' ? 'LOCK (naya login block)' : 'REPLACE (naya login purane ko hataye)'}</b> • idle logout ${st.idleMin} min${st.strictIp ? ' • strict IP ON' : ''}</p></div>
+    <div class="ax3-card"><h3><i class="fas fa-mobile-screen" style="color:var(--ax-a)"></i> Logged-in devices</h3>
+      ${S.sessions.map(s => `<div class="sc-dev ${s.current ? 'me' : ''}"><div class="sc-ic"><i class="fas fa-${s.device && s.device.type === 'desktop' ? 'desktop' : 'mobile-screen'}"></i></div><div><b>${E(s.device && s.device.label)} ${s.current ? '<span class="ax3-pill ok">THIS DEVICE</span>' : ''}</b><small>${E(s.email)} • IP ${E(s.ip)}</small><small>Login ${ago(s.createdAt)} • active ${ago(s.lastSeen)}</small></div>${s.current ? '' : `<button class="ax3-b" style="background:linear-gradient(180deg,#ff7a6a,#d6243a)!important;color:#fff!important" onclick="axSecKick('${s.id}')"><i class="fas fa-ban"></i> Kick</button>`}</div>`).join('') || '<div style="color:var(--ax-mut)">Koi device nahi</div>'}
+      <div class="ax3-row" style="margin-top:10px"><button class="ax3-b ghost" onclick="axSecOthers()"><i class="fas fa-right-from-bracket"></i> Logout all other devices</button><button class="ax3-b" style="background:linear-gradient(180deg,#ff7a6a,#d6243a)!important;color:#fff!important" onclick="axSecPanic()"><i class="fas fa-skull-crossbones"></i> PANIC: logout everywhere</button></div></div>
+    <div class="ax3-card"><h3><i class="fas fa-lock" style="color:var(--ax-c)"></i> Login rules</h3><span class="sc-lbl">Jab admin pehle se login ho aur koi doosra login kare:</span>
+      <div class="sc-seg"><button id="sc-p-lock" class="${st.policy === 'lock' ? 'on' : ''}" onclick="axSecPol('lock')">🔒 LOCK — doosre ko bahar rakho</button><button id="sc-p-replace" class="${st.policy === 'replace' ? 'on' : ''}" onclick="axSecPol('replace')">♻️ REPLACE — purana logout</button></div>
+      <span class="sc-lbl">Idle auto-logout</span><div class="sc-seg" id="sc-idle">${[10, 20, 30, 60, 120].map(m => `<button class="${st.idleMin === m ? 'on' : ''}" data-m="${m}" onclick="axSecIdle(${m})">${m}m</button>`).join('')}</div>
+      <div class="ax3-row"><button class="ax3-b ${st.strictIp ? '' : 'ghost'}" onclick="axSecStrict(${!st.strictIp})"><i class="fas fa-location-dot"></i> Strict IP: ${st.strictIp ? 'ON' : 'OFF'}</button></div><small style="color:var(--ax-mut);display:block;margin-top:8px;font-size:11px">Strict IP ON = IP badalte hi session kill (mobile data par kabhi-kabhi login dobara karna pad sakta hai).</small></div>
+    <div class="ax3-card"><h3><i class="fas fa-key" style="color:var(--ax-b)"></i> Change admin password</h3>
+      <input class="sc-f" id="sc-pw0" type="password" placeholder="Current password" autocomplete="current-password"><input class="sc-f" id="sc-pw1" type="password" placeholder="New password (min 10 chars)" autocomplete="new-password"><input class="sc-f" id="sc-pw2" type="password" placeholder="Confirm new password" autocomplete="new-password">
+      <button class="ax3-b" onclick="axSecPw()"><i class="fas fa-floppy-disk"></i> Update password</button><small style="color:var(--ax-mut);display:block;margin-top:8px;font-size:11px">Badalte hi baaki sab devices automatic logout ho jayenge.</small></div>
+    <div class="ax3-card"><h3><i class="fas fa-clipboard-check" style="color:var(--ax-a)"></i> Hardening checklist</h3><div class="sc-chk">
+      <div><span>Single-device session lock</span><span class="sc-ok">ON</span></div><div><span>Server-side ADMIN_EMAILS allow-list (${S.adminEmails})</span><span class="${S.adminEmails ? 'sc-ok' : 'sc-no'}">${S.adminEmails ? 'ON' : 'MISSING'}</span></div>
+      <div><span>Emergency Recovery Code (ADMIN_RECOVERY_CODE)</span><span class="${S.recoverySet ? 'sc-ok' : 'sc-no'}">${S.recoverySet ? 'SET' : 'NOT SET'}</span></div><div><span>Intruder auto-ban + IP block</span><span class="sc-ok">ON</span></div>
+      <div><span>Firebase rules lock (admin-only writes)</span><span class="sc-no">APPLY</span></div></div><small style="color:var(--ax-mut);display:block;font-size:11px">Last line: <b>firebase-rules-admin-lock.json</b> Firebase Console → Realtime Database → Rules me merge karo (SECURITY_GUIDE_HINGLISH.md dekho).</small></div>
+    <div class="ax3-card"><h3><i class="fas fa-ban" style="color:#ff8a7a"></i> Blocked IPs</h3>${S.blocklist.length ? S.blocklist.map(x => `<div class="ax3-list"><div><span>${E(x.ip)}<small>${E(x.reason)} • ${ago(x.at)}</small></span><button class="ax3-b ghost" style="padding:7px 10px;font-size:11px" onclick="axSecUnblock('${E(x.key)}')">Unblock</button></div></div>`).join('') : '<div style="color:var(--ax-mut);font-size:12px">Koi IP block nahi.</div>'}</div>
+    <div class="ax3-card"><h3><i class="fas fa-list-check" style="color:var(--ax-c)"></i> Security log</h3>${S.events.slice(0, 40).map(e => `<div class="sc-ev ${e.severity}"><div><b>${E(label[e.type] || e.type)}</b><small>${E(e.detail)}</small><small>${E(e.email || '')} ${e.device ? '• ' + E(e.device) : ''} ${e.ip ? '• ' + E(e.ip) : ''} • ${ago(e.ts)}</small></div></div>`).join('') || '<div style="color:var(--ax-mut)">Abhi koi event nahi</div>'}</div>`;
+  }
+  const act = async (body, msg) => { try { const r = await window.axSess(body); showToast(msg || 'Done'); await load(); return r; } catch (e) { showToast(e.message, 'error'); } };
+  window.axSecKick = (id) => confirm('Is device ko abhi logout kar du?') && act({ action: 'revoke', id }, 'Device kick ho gaya');
+  window.axSecOthers = () => confirm('Baaki sab devices logout?') && act({ action: 'revoke_others' }, 'Baaki devices logout');
+  window.axSecPanic = async () => { if (!confirm('PANIC: sab devices (yeh bhi) logout honge. Continue?')) return; try { await window.axSess({ action: 'panic' }); } catch (e) {} window.axForceLogout('Panic logout ho gaya. Dobara login karo.'); };
+  window.axSecPol = (p) => act({ action: 'save_settings', settings: { policy: p } }, 'Policy save');
+  window.axSecIdle = (m) => act({ action: 'save_settings', settings: { idleMin: m } }, 'Idle time save');
+  window.axSecStrict = (v) => act({ action: 'save_settings', settings: { strictIp: v } }, 'Strict IP ' + (v ? 'ON' : 'OFF'));
+  window.axSecUnblock = (k) => act({ action: 'unblock', key: k }, 'IP unblock');
+  window.axSecPw = async () => {
+    const a = q('sc-pw0').value, n = q('sc-pw1').value, c = q('sc-pw2').value;
+    if (!a || !n) return showToast('Dono password bharo', 'error'); if (n.length < 10) return showToast('Naya password kam se kam 10 character', 'error'); if (n !== c) return showToast('Confirm password match nahi karta', 'error'); if (n === a) return showToast('Naya password purane se alag rakho', 'error');
+    try { const u = window.axAuth.currentUser; await window.axReauth(u, a); await window.axUpdatePw(u, n); const r = await window.axSess({ action: 'password_changed' }); ['sc-pw0', 'sc-pw1', 'sc-pw2'].forEach(i => q(i).value = ''); showToast('Password badal gaya • ' + (r.n || 0) + ' device logout'); load(); }
+    catch (e) { showToast(/wrong|invalid-credential|auth\/invalid/i.test(e.code + e.message) ? 'Current password galat hai' : (e.message || 'Fail'), 'error'); }
+  };
+  function mount() { if (q('sc-body')) return; const v = q('view-SecCenter'); if (v) v.innerHTML = '<div class="panel-title" style="font-size:20px;font-weight:800;margin-bottom:12px"><i class="fas fa-shield-halved"></i> Security Center</div><div id="sc-body"><div class="ax3-card">Loading…</div></div>'; }
+  const prev = window.switchTab; window.switchTab = (t) => { prev(t); clearInterval(timer); if (t === 'SecCenter') { mount(); load(); timer = setInterval(load, 12000); } };
+  window.axSecLoad = load;
 })();
 
 </script>

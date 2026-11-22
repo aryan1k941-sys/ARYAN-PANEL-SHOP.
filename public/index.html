@@ -954,7 +954,7 @@ input,textarea,select{border-radius:12px!important}
 .v3-meter{height:6px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin:-4px 0 10px}
 .v3-meter i{display:block;height:100%;width:0;transition:width .3s,background .3s}
 .v3-meter-t{font-size:11px;color:var(--v3-mut);margin:-4px 0 8px;text-align:right}
-.v3-sort{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.v3-chips button.on{background:var(--v3-btn);color:var(--v3-btn-ink);border:0;box-shadow:var(--v3-btn-sh)}.v3-sort{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
 .v3-sort button{white-space:nowrap}
 @media (min-width:700px){.v3-two{grid-template-columns:repeat(2,minmax(0,1fr))}#v3-dock{display:none!important}.container{padding-bottom:30px!important}.float-tg{bottom:20px!important}#v3-wa{bottom:84px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -3174,8 +3174,31 @@ function v3Dock() {
 }
 function v3Sync(t) { document.querySelectorAll('#v3-dock button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); }
 const v3Obs = new MutationObserver(() => { const on = getComputedStyle(document.getElementById('main-app')).display !== 'none'; const d = document.getElementById('v3-dock'); if (d) d.classList.toggle('on', on); });
-function v3Render() { try { v3RenderDash(); v3RenderDeposit(); v3RenderNet(); v3BuildSupport(); } catch (e) { console.warn('v3', e); } }
+function v3Render() { try { v3Security(); v3RenderSec(); v3RenderDash(); v3RenderDeposit(); v3RenderNet(); v3BuildSupport(); } catch (e) { console.warn('v3', e); } }
 window.v3Render = v3Render;
+
+
+/* ---------- user account security: login history + idle auto-logout ---------- */
+let v3SecFor = '', v3Last = Date.now();
+function v3Dev() { const u = navigator.userAgent; const os = /Android ([\d.]+)/.test(u) ? 'Android ' + RegExp.$1 : /iPhone|iPad/.test(u) ? 'iOS' : /Windows/.test(u) ? 'Windows' : /Mac OS X/.test(u) ? 'macOS' : /Linux/.test(u) ? 'Linux' : 'Device'; const br = /Edg\//.test(u) ? 'Edge' : /SamsungBrowser/.test(u) ? 'Samsung' : /Chrome\//.test(u) ? 'Chrome' : /Firefox\//.test(u) ? 'Firefox' : /Safari\//.test(u) ? 'Safari' : 'Browser'; return br + ' on ' + os; }
+function v3Security() {
+  if (!currentUserId || v3SecFor === currentUserId) return; v3SecFor = currentUserId;
+  const k = 'v3_login_' + currentUserId;
+  try { if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, '1'); push(ref(db, `users/${currentUserId}/login_log`), { ts: Date.now(), device: v3Dev() }).then(async () => { const g = (await get(ref(db, `users/${currentUserId}/login_log`))).val() || {}; const ks = Object.keys(g).sort((a, b) => (g[a].ts || 0) - (g[b].ts || 0)); for (const x of ks.slice(0, Math.max(0, ks.length - 10))) await remove(ref(db, `users/${currentUserId}/login_log/${x}`)); }).catch(() => {}); } } catch (e) {}
+}
+window.v3Idle = (m) => { try { localStorage.setItem('v3_idle', m); } catch (e) {} v3RenderSec(); showToast(m ? 'Auto-logout ' + m + ' min par set' : 'Auto-logout band'); };
+function v3RenderSec() {
+  const v = document.getElementById('view-Profile'); if (!v) return; let c = document.getElementById('v3-sec');
+  if (!c) { c = document.createElement('div'); c.id = 'v3-sec'; c.className = 'v3-card v3-wrap'; const h = v.querySelector('.panel-heading'); h.parentNode.insertBefore(c, h.nextSibling); }
+  const log = Object.values(userData.login_log || {}).filter(Boolean).sort((a, b) => b.ts - a.ts).slice(0, 6), idle = Number(localStorage.getItem('v3_idle') || 30);
+  c.innerHTML = `<h4><i class="fas fa-shield-halved" style="color:var(--v3-jade)"></i> Account security</h4>
+    <span style="font-size:12px;color:var(--v3-mut)">Auto-logout (inactive rehne par)</span><div class="v3-chips" style="margin:8px 0 12px">${[[15, '15 min'], [30, '30 min'], [60, '1 hour'], [0, 'Never']].map(x => `<button class="${idle === x[0] ? 'on' : ''}" onclick="v3Idle(${x[0]})">${x[1]}</button>`).join('')}</div>
+    <span style="font-size:12px;color:var(--v3-mut)">Recent logins — koi anjaan device dikhe to turant password badlo</span>
+    <div class="v3-feed" style="margin:8px 0 12px">${log.length ? log.map((l, i) => `<div><span>${escH(l.device)}<small>${new Date(l.ts).toLocaleString('en-IN')}</small></span><span class="${i ? '' : 'v3-pos'}">${i ? '' : 'Latest'}</span></div>`).join('') : '<div style="color:var(--v3-mut)">Pehla login record ho raha hai…</div>'}</div>
+    <div class="v3-row"><button class="v3-btn sm" onclick="document.querySelector('#view-Profile .pz-tabs button:nth-child(2)')&&document.querySelector('#view-Profile .pz-tabs button:nth-child(2)').click()"><i class="fas fa-key"></i> Change password</button><button class="v3-btn sm ghost" onclick="document.getElementById('btn-logout').click()"><i class="fas fa-right-from-bracket"></i> Logout this device</button></div>`;
+}
+['click', 'keydown', 'touchstart', 'scroll'].forEach(e => window.addEventListener(e, () => { v3Last = Date.now(); }, { passive: true }));
+setInterval(() => { if (!currentUserId) return; const m = Number(localStorage.getItem('v3_idle') || 30); if (m > 0 && Date.now() - v3Last > m * 60000) { showToast('Inactive rehne se logout kar diya gaya', 'error'); document.getElementById('btn-logout').click(); } }, 30000);
 
 /* ---------- Buy Keys: sort bar ---------- */
 window.v3SetSort = (s) => { v3Sort = s; document.querySelectorAll('.v3-sort button').forEach(b => b.classList.toggle('active', b.dataset.s === s)); renderBuyKeysGrid(); };
