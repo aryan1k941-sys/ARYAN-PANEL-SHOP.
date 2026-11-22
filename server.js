@@ -4,6 +4,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { AdminSec } = require('./lib/adminsec');
 const { FirebaseDB } = require('./lib/firebase');
 const { Payments, PayError } = require('./lib/payments');
 const { safeRequest } = require('./lib/netguard');
@@ -17,6 +18,7 @@ function createApp(env = process.env) {
   const fb = new FirebaseDB(env);
   const pay = new Payments(fb, env, console);
   const notify = new Notifier(fb, env, console); pay.notify = notify;
+  const sec = new AdminSec(fb, env, console);
   const adminEmails = new Set(String(env.ADMIN_EMAILS || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean));
   const origins = new Set(String(env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim().replace(/\/$/, '')).filter(Boolean));
   const publicBase = String(env.PUBLIC_BASE_URL || env.RENDER_EXTERNAL_URL || '').replace(/\/$/, '');
@@ -54,12 +56,16 @@ function createApp(env = process.env) {
     if (o && origins.has(o)) { res.setHeader('Access-Control-Allow-Origin', o); res.setHeader('Vary', 'Origin'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key'); res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Max-Age', '600'); }
   };
   const needFb = (res) => { if (fb.configured()) return false; fail(res, 503, 'ENOFB', 'Server me Firebase credentials set nahi hain (FIREBASE_SERVICE_ACCOUNT env variable). Deployment guide dekho.'); return true; };
-  const requireAdmin = async (req, res) => {
+  const requireAdmin = async (req, res, opts = {}) => {
     if (!adminEmails.size) { fail(res, 503, 'ENOADMIN', 'Server me ADMIN_EMAILS env variable set nahi hai.'); return null; }
+    const ip = clientIp(req), ua = String(req.headers['user-agent'] || '');
+    if (await sec.isBlocked(ip)) { fail(res, 403, 'EBLOCKED', 'Aapka IP block kar diya gaya hai.'); return null; }
     const m = /^Bearer (.+)$/.exec(req.headers.authorization || '');
     if (!m) { fail(res, 401, 'EAUTH', 'Admin login token missing'); return null; }
-    try { const u = await fb.verifyIdToken(m[1]); if (!adminEmails.has(u.email)) { fail(res, 403, 'EFORBIDDEN', 'Ye account admin nahi hai'); return null; } return u; }
-    catch (e) { fail(res, 401, 'EAUTH', e.message); return null; }
+    let u; try { u = await fb.verifyIdToken(m[1]); } catch (e) { fail(res, 401, 'EAUTH', e.message); return null; }
+    if (!adminEmails.has(u.email)) { sec.intruder({ email: u.email, uid: u.uid, ip, ua, why: 'non-admin ne admin API use ki' }).catch(() => {}); fail(res, 403, 'EFORBIDDEN', 'Access denied. Ye account admin nahi hai — aapki details log ho gayi hain.'); return null; }
+    if (sec.required && !opts.noSession) { try { u.session = await sec.check(req.headers['x-admin-session'], { ip, ua, user: u }); } catch (e) { fail(res, e.status || 401, e.code || 'ESESSION', e.message); return null; } }
+    return u;
   };
   const baseOf = (req) => publicBase || ((req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers.host);
 
@@ -264,6 +270,31 @@ function createApp(env = process.env) {
       if (!['signup', 'reseller'].includes(b.event)) return fail(res, 400, 'EACTION', 'Unknown event');
       return ok(res, await notify.clientEvent(b.event, b.uid, String(b.via || '')));
     }
+    if (p === '/api/admin/session' && m === 'POST') {
+      if (limited(ip, 'adminsess', 90)) return fail(res, 429, 'ERATE', 'Too many requests');
+      if (needFb(res)) return; const b = await parseBody(req); const ua = String(req.headers['user-agent'] || '');
+      try {
+        if (b.action === 'login') {
+          if (limited(ip, 'adminlogin', 8)) return fail(res, 429, 'ERATE', 'Bahut zyada login try. Thodi der baad aana.');
+          const admin = await requireAdmin(req, res, { noSession: true }); if (!admin) return;
+          const tok = /^Bearer (.+)$/.exec(req.headers.authorization || '')[1];
+          return ok(res, { ...(await sec.login({ user: admin, idToken: tok, ip, ua, recoveryCode: b.recoveryCode })), email: admin.email });
+        }
+        const admin = await requireAdmin(req, res); if (!admin) return; const cur = admin.session && admin.session.id;
+        switch (b.action) {
+          case 'ping': return ok(res, { t: Date.now() });
+          case 'status': { const [sessions, settings, events, blocklist] = await Promise.all([sec.list(cur), sec.settings(), sec.events(60), sec.blocklist()]); return ok(res, { sessions, settings, events, blocklist, me: admin.email, recoverySet: !!sec.recovery, adminEmails: adminEmails.size }); }
+          case 'revoke': await sec.revoke(String(b.id || ''), admin.email, ip, ua, 'Device kick kiya'); return ok(res, { self: String(b.id) === cur });
+          case 'revoke_others': return ok(res, { n: await sec.revokeOthers(cur, admin.email, ip, ua) });
+          case 'logout': if (cur) await sec.revoke(cur, admin.email, ip, ua, 'Admin logout'); return ok(res, {});
+          case 'panic': await sec.revokeAll(admin.email, ip, ua); return ok(res, {});
+          case 'save_settings': { const st = await sec.saveSettings(b.settings || {}); await sec.event('settings_changed', { email: admin.email, ip, ua, severity: 'warn', detail: JSON.stringify(st) }); return ok(res, st); }
+          case 'unblock': await sec.unblock(String(b.key || '')); await sec.event('unblocked', { email: admin.email, ip, ua, detail: String(b.key) }); return ok(res, {});
+          case 'password_changed': await sec.event('password_changed', { email: admin.email, ip, ua, severity: 'warn', detail: 'Admin password badla' }); return ok(res, { n: await sec.revokeOthers(cur, admin.email, ip, ua) });
+          default: return fail(res, 400, 'EACTION', 'Unknown action');
+        }
+      } catch (e) { return fail(res, e.status || 500, e.code || 'ESEC', e.message); }
+    }
     if (p === '/api/admin/notify' && m === 'POST') {
       if (limited(ip, 'admin', 60)) return fail(res, 429, 'ERATE', 'Too many requests');
       if (needFb(res)) return; const admin = await requireAdmin(req, res); if (!admin) return;
@@ -331,7 +362,7 @@ function createApp(env = process.env) {
   });
   server.requestTimeout = 60000; server.headersTimeout = 20000;
   if (env.AUTO_RECONCILE !== '0') { pay.startReconciler(); notify.startWatcher(); }
-  return { server, fb, pay, notify };
+  return { server, fb, pay, notify, sec };
 }
 
 if (require.main === module) {

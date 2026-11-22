@@ -1,0 +1,67 @@
+{
+  "_README": "MERGE these nodes into your existing rules (do not replace the whole file). Only the admin Gmail(s) can WRITE site/product/payment settings; the security nodes are server-only.",
+  "rules": {
+    "announcements": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "api_settings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "auto_payment_settings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "branding": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "media": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "payment_settings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "pid_mappings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "product_maintenance": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "site_settings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "store_management": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "store_products": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "suppliers": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "supplier_settings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "telegram_settings": {
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "admin_audit": {
+      ".read": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')",
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email == 'youradmin@gmail.com')"
+    },
+    "admin_sessions": {
+      ".read": false,
+      ".write": false
+    },
+    "admin_security": {
+      ".read": false,
+      ".write": false
+    },
+    "security_events": {
+      ".read": false,
+      ".write": false
+    },
+    "security_blocklist": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}
